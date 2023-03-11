@@ -8,7 +8,6 @@ struct Date {
 };
 struct Result
 {
-	int numSesion;
 	char subName[64];
 	int grading;
 };

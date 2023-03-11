@@ -7,7 +7,7 @@ class Student : public Person{
 	char departments[64];
 	char group[16];
 	char numGradebook[16];
-	vector<Session> Sesions;
+	vector<Session> Sessions;
 public:
 	Student(char [1024]);
 };

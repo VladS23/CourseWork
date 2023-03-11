@@ -3,7 +3,7 @@
 #include <vector>
 /// <summary>
 /// Строка инициализации состоит из данных разделеных : в конце ; 
-/// формат строки "ФИО:Дата рождения:Год поступления:Институт:факультет:Кафедра:Группа:Номер Зачетки:Номер сессии1:предмет1:оценка1:Номер сессии1:предметn:оценкаn6:Номер сессииk:предметm:оценкаm;
+/// формат строки "ФИО:Дата рождения:Год поступления:Институт:факультет:Кафедра:Группа:Номер Зачетки:Номер сессии1:предмет1:оценка1:Номер сессии1:предметn:оценкаn6:Номер сессииk:предметm:оценкаm;"
 /// оценки за сесию должны быть отсортированы по возрастанию номера сессии, к которой они относятся 
 /// </summary>
 /// <param name="initString"></param>
@@ -103,5 +103,32 @@ Student::Student(char initString [1024]) {
 		gender[i] = initVector[curentInitVecEl].chars[i];
 		i++;
 	}
-	//зесь будет код для сохранения оценок
+	curentInitVecEl++;
+	int prevSession = 0;
+	int curSesIterator = -1;
+	while (curentInitVecEl< initVector.size())
+	{
+		if (atoi(initVector[curentInitVecEl].chars) > prevSession) {
+			Session curSes;
+			prevSession = atoi(initVector[curentInitVecEl].chars);
+			curSes.numSesion = atoi(initVector[curentInitVecEl].chars);
+			Sessions.push_back(curSes);
+			curSesIterator++;
+			curentInitVecEl++;
+		}
+		else {
+			curentInitVecEl++;
+		}
+		Result curOneRes;
+		int i = 0;
+		while (i < 64) {
+			curOneRes.subName[i] = initVector[curentInitVecEl].chars[i];
+			i++;
+		}
+		curentInitVecEl++;
+		curOneRes.grading = atoi(initVector[curentInitVecEl].chars);
+		Sessions[curSesIterator].oneRes.push_back(curOneRes);
+		curentInitVecEl++;
+
+	}
 }
