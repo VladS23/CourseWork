@@ -27,12 +27,18 @@
     <ClCompile Include="Structures.h">
       <Filter>Файлы заголовков</Filter>
     </ClCompile>
+    <ClCompile Include="Database.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Person.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="Student.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="Database.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>

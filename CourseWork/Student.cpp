@@ -1,5 +1,6 @@
 #include "Student.h"
 #include "Person.h"
+#include "Database.h"
 #include <vector>
 #include <iostream>
 #include <charconv>
@@ -24,7 +25,6 @@ Student::Student(char initString [10240]) {
 		}
 		int j = 0;
 		//разбиваем строку по : в масиивы символов
-		auto x= initString[i];
 		while (initString[i] != ':' && initString[i+1] != ';') {
 			curDataEl.chars[j] = initString[i];
 			i++;
@@ -435,7 +435,7 @@ bool Student::deleteSesResultByIndex(int sesNum, int resInd)
 	return false;
 }
 /// <summary>
-/// test all methods
+/// test all methods of programm
 /// </summary>
 /// <returns></returns>
 int Student::tests()
@@ -494,6 +494,14 @@ int Student::tests()
 	boleanTest.push_back(s1.deleteSesResultByIndex(5, 777)==false);
 	boleanTest.push_back(s1.setDateOfBorn(Date{ 12, 12, 2004 })==true);
 	boleanTest.push_back(s1.setDateOfBorn(Date{ 777, 777, 777 })==false);
+	char dbt1[1024] = "Петров Петр Петрович:1.12.2003:2021:ИКБ:КБ-1:БАСО-01-21:Б0404:male:1:calculation:4:1:phys:3:2:programming:5:3:SecurityOS:4:4:SecurityDB:5;";
+	char dbt2[1024] = "Иванов Иван Иванович:1.12.2003:2021:ИКБ:КБ-1:БАСО-01-21:Б0404:male:1:calculation:4:1:phys:3:2:programming:5:3:SecurityOS:4:4:SecurityDB:5;";
+	Database db1;
+	db1.addStudent(dbt1);
+	db1.students.push_back(Student(dbt2));
+	boleanTest.push_back(db1.saveDb());
+	char ccc3[64] = "D:\\students1.txt";
+	boleanTest.push_back(db1.loadDb(ccc3));
 	for (int i = 0; i < boleanTest.size(); i++) {
 		if (boleanTest[i]) {
 			cout << "TEST " << i + 1 << " PASSED" << endl;
