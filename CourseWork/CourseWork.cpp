@@ -6,7 +6,7 @@
 using namespace std;
 
 int main() {
-    char c1[1024] = "Петров Петр Петрович:1.12.2003:2021:ИКБ:КБ-1:БАСО-01-21:Б0404:male:1:calculation:4:1:phys:3:2:programming:5;";
+    char c1[1024] = "Петров Петр Петрович:1.12.2003:2021:ИКБ:КБ-1:БАСО-01-21:Б0404:male:1:calculation:4:1:phys:3:2:programming:5:3:SecurityOS:4:4:SecurityDB:5;";
     Student s1(c1);
     int y = 5 + 9;
     vector <char> v1 = s1.toCharVec();
@@ -35,6 +35,18 @@ int main() {
     bool b4 = s1.setFaculty(ccc2);
     char ccc1[64] = "ИИТ";
     bool b3 = s1.setFaculty(ccc1);
+    bool b5 = s1.deleteSessionByNum(5);
+    bool b6 = s1.deleteSessionByNum(4);
+    bool b7 = s1.deleteSessionByNum(2);
+    bool b8 = s1.deleteSessionByNum(2);
+    bool b9 = s1.deleteSessionByNum(1);
+    bool b10 = s1.addSessionByNum(1);
+    bool b11 = s1.addSessionByNum(2);
+    bool b12 = s1.addSessionByNum(2);
+    bool b13 = s1.addSessionByNum(10);
+    bool b14 = s1.addSessionByNum(4);
+    bool b15 = s1.addSessionByNum(6);
+    bool b16 = s1.addSessionByNum(5);
     int x = 5 + 9;
     return 0;
 }

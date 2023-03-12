@@ -23,8 +23,8 @@ public:
 	bool setDepartments(char[64]);
 	bool setGroup(char[64]);
 	bool setNumGradebook(char[16]);
-	bool deleteSessionByIndex(int);
-	bool addSession();
+	bool deleteSessionByNum(int);
+	bool addSessionByNum(int);
 	bool updSesResultByIndex(Result, int);
 	bool addSesResultByIndex(Result, int);
 	bool deleteSesResultByIndex(int);

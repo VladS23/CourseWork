@@ -9,7 +9,7 @@
 /// оценки за сесию должны быть отсортированы по возрастанию номера сессии, к которой они относятся 
 /// </summary>
 /// <param name="initString"></param>
-Student::Student(char initString [1024]) {
+Student::Student(char initString [10240]) {
 	//вектор для хранения данных разбитых по :
 	vector <dataEl> initVector;
 	int i = 0;
@@ -329,6 +329,56 @@ bool Student::setNumGradebook(char newVal [16])
 			numGradebook[i] = newVal[i];
 		}
 		return true;
+	}
+	return false;
+}
+
+bool Student::deleteSessionByNum(int num)
+{
+	vector <Session>::iterator Iter;
+	int ind = -1;
+	for (int i = 0; i < sessions.size(); i++) {
+		if (sessions[i].numSesion == num) {
+			ind = i;
+			break;
+		}
+	}
+	if (ind != -1) {
+		Iter = sessions.begin()+ind;
+		sessions.erase(Iter);
+		return true;
+	}
+	return false;
+}
+
+bool Student::addSessionByNum(int num)
+{
+	int ind = -1;
+	for (int i = 0; i < sessions.size(); i++) {
+		if (sessions[i].numSesion == num) {
+			ind = i;
+			break;
+		}
+	}
+	if (ind == -1) {
+		for (int i = 0; i < sessions.size()-1; i++) {
+			if (sessions[i].numSesion<num && sessions[i + 1].numSesion>num) {
+				ind = i + 1;
+				break;
+			}
+		}
+		if (ind == -1) {
+			if (sessions[0].numSesion > num) {
+				ind = 0;
+			}
+			if (sessions[sessions.size() - 1].numSesion < num) {
+				ind = sessions.size();
+			}
+		}
+			Session newSes;
+			newSes.numSesion = num;
+			sessions.insert(sessions.begin() + ind, newSes);
+			return true;
 	}
 	return false;
 }
