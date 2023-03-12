@@ -235,3 +235,38 @@ vector<char> Student::toCharVec() {
 	result[result.size() - 1] = ';';
 	return result;
 }
+
+char* Student::getFaculty()
+{
+	char* res = (char*)malloc(sizeof(faculty));
+	for (int i = 0; i < sizeof(faculty) / sizeof(char); i++) {
+		*(res + i) = faculty[i];
+	}
+	return res;
+}
+char* Student::getDepartments()
+{
+	char* res = (char*)malloc(sizeof(departments));
+	for (int i = 0; i < sizeof(departments) / sizeof(char); i++) {
+		*(res + i) = departments[i];
+	}
+	return res;
+}
+
+char* Student::getGroup()
+{
+	char* res = (char*)malloc(sizeof(group));
+	for (int i = 0; i < sizeof(group) / sizeof(char); i++) {
+		*(res + i) = group[i];
+	}
+	return res;
+}
+
+char* Student::getNumGradebook()
+{
+	char* res = (char*)malloc(sizeof(numGradebook));
+	for (int i = 0; i < sizeof(numGradebook) / sizeof(char); i++) {
+		*(res + i) = numGradebook[i];
+	}
+	return res;
+}
