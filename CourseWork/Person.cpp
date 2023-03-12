@@ -14,7 +14,7 @@ bool Person::checkCharArray(char* newVal, int len)
 
 char* Person::getName()
 {
-	char* res = (char*)malloc(sizeof(name));
+	char* res = new char[sizeof(name)];
 	for (int i = 0; i < sizeof(name) / sizeof(char); i++) {
 		*(res + i) = name[i];
 	}
@@ -23,7 +23,7 @@ char* Person::getName()
 
 char* Person::getGender()
 {
-	char* res = (char*)malloc(sizeof(gender));
+	char* res = new char[sizeof(gender)];
 	for (int i = 0; i < sizeof(gender) / sizeof(char); i++) {
 		*(res + i) = gender[i];
 	}
@@ -38,6 +38,19 @@ bool Person::setName(char newVal [64])
 			name[i] = newVal[i];
 		}
 		return true;
+	}
+	return false;
+}
+
+bool Person::setDateOfBorn(Date date)
+{
+	if (date.day <= 31 && date.day > 0) {
+		if (date.month <= 12 && date.month > 0) {
+			if (date.year <= 2050 && date.year > 1900) {
+				dateOfBorn = date;
+				return true;
+			}
+		}
 	}
 	return false;
 }

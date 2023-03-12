@@ -10,7 +10,7 @@ public:
 	char* getName();
 	Date getDateOfBorn() { return dateOfBorn; };
 	char* getGender();
-	bool setName(char[64]);
-	bool setDateOfBorn(Date);
-	bool setGender(char[32]);
+	bool setName(char newVal[64]);
+	bool setDateOfBorn(Date date);
+	bool setGender(char newVal[32]);
 };

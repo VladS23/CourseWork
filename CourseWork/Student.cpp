@@ -238,7 +238,7 @@ vector<char> Student::toCharVec() {
 
 char* Student::getFaculty()
 {
-	char* res = (char*)malloc(sizeof(faculty));
+	char* res = new char [sizeof(faculty)];
 	for (int i = 0; i < sizeof(faculty) / sizeof(char); i++) {
 		*(res + i) = faculty[i];
 	}
@@ -246,7 +246,7 @@ char* Student::getFaculty()
 }
 char* Student::getDepartments()
 {
-	char* res = (char*)malloc(sizeof(departments));
+	char* res = new char[sizeof(departments)];
 	for (int i = 0; i < sizeof(departments) / sizeof(char); i++) {
 		*(res + i) = departments[i];
 	}
@@ -255,7 +255,7 @@ char* Student::getDepartments()
 
 char* Student::getGroup()
 {
-	char* res = (char*)malloc(sizeof(group));
+	char* res = new char[sizeof(group)];
 	for (int i = 0; i < sizeof(group) / sizeof(char); i++) {
 		*(res + i) = group[i];
 	}
@@ -264,7 +264,7 @@ char* Student::getGroup()
 
 char* Student::getNumGradebook()
 {
-	char* res = (char*)malloc(sizeof(numGradebook));
+	char* res = new char[sizeof(numGradebook)];
 	for (int i = 0; i < sizeof(numGradebook) / sizeof(char); i++) {
 		*(res + i) = numGradebook[i];
 	}
@@ -375,10 +375,132 @@ bool Student::addSessionByNum(int num)
 				ind = sessions.size();
 			}
 		}
-			Session newSes;
-			newSes.numSesion = num;
-			sessions.insert(sessions.begin() + ind, newSes);
-			return true;
+		Session newSes;
+		newSes.numSesion = num;
+		sessions.insert(sessions.begin() + ind, newSes);
+		return true;
 	}
 	return false;
+}
+
+bool Student::updSesResultByIndex(Result res, int sesNum, int resInd)
+{
+	int sesInd = -1;
+	for (int i = 0; i < sessions.size() - 1; i++) {
+		if (sessions[i].numSesion==sesNum) {
+			sesInd = i;
+			break;
+		}
+	}
+	if (sesInd != -1) {
+		if (resInd < sessions[sesInd].oneRes.size()) {
+			sessions[sesInd].oneRes[resInd] = res;
+			return true;
+		}
+	}
+	return false;
+}
+
+bool Student::addSesResult(Result res, int sesNum)
+{
+	int sesInd = -1;
+	for (int i = 0; i < sessions.size() - 1; i++) {
+		if (sessions[i].numSesion == sesNum) {
+			sesInd = i;
+			break;
+		}
+	}
+	if (sesInd != -1) {
+		sessions[sesInd].oneRes.push_back(res);
+		return true;
+	}
+	return false;
+}
+
+bool Student::deleteSesResultByIndex(int sesNum, int resInd)
+{
+	int sesInd = -1;
+	for (int i = 0; i < sessions.size() - 1; i++) {
+		if (sessions[i].numSesion == sesNum) {
+			sesInd = i;
+			break;
+		}
+	}
+	if (sesInd != -1) {
+		if (resInd < sessions[sesInd].oneRes.size()) {
+			sessions[sesInd].oneRes.erase(sessions[sesInd].oneRes.begin() + resInd);
+				return true;
+		}
+	}
+	return false;
+}
+/// <summary>
+/// test all methods
+/// </summary>
+/// <returns></returns>
+int Student::tests()
+{
+	char c1[1024] = "Петров Петр Петрович:1.12.2003:2021:ИКБ:КБ-1:БАСО-01-21:Б0404:male:1:calculation:4:1:phys:3:2:programming:5:3:SecurityOS:4:4:SecurityDB:5;";
+	Student s1(c1);
+	int y = 5 + 9;
+	vector <char> v1 = s1.toCharVec();
+	char* c2 = (char*)malloc(sizeof(char) * v1.size());
+	for (int i = 0; i < v1.size(); i++) {
+		*(c2 + i) = v1[i];
+	}
+	*(c2 + v1.size()) = '\0';
+	Student s2(c2);
+	vector <char> v2 = s2.toCharVec();
+	char* c3 = (char*)malloc(sizeof(char) * v2.size());
+	for (int i = 0; i < v2.size(); i++) {
+		*(c3 + i) = v2[i];
+	}
+	int i1 = s1.getYearOfAdmission();
+	char* cc1 = s1.getFaculty();
+	char* cc2 = s1.getDepartments();
+	char* cc3 = s1.getGroup();
+	char* cc4 = s1.getNumGradebook();
+	char* cc5 = s1.getName();
+	char* cc6 = s1.getGender();
+	Date d1 = s1.getDateOfBorn();
+	vector <bool> boleanTest;
+	boleanTest.push_back(s1.setYearOfAdmission(1232)==false);
+	boleanTest.push_back(s1.setYearOfAdmission(2018)==true);
+	char ccc1[64] = "ИИТ";
+	char ccc2[64] = ":ИИТ;";
+	boleanTest.push_back(s1.setFaculty(ccc1)==true);
+	boleanTest.push_back(s1.setFaculty(ccc2)==false);
+	boleanTest.push_back(s1.deleteSessionByNum(5)==false);
+	boleanTest.push_back(s1.deleteSessionByNum(4)==true);
+	boleanTest.push_back(s1.deleteSessionByNum(2)==true);
+	boleanTest.push_back(s1.deleteSessionByNum(2)==false);
+	boleanTest.push_back(s1.deleteSessionByNum(1)==true);
+	boleanTest.push_back(s1.addSessionByNum(1)==true);
+	boleanTest.push_back(s1.addSessionByNum(2)==true);
+	boleanTest.push_back(s1.addSessionByNum(2)==false);
+	boleanTest.push_back(s1.addSessionByNum(10)==true);
+	boleanTest.push_back(s1.addSessionByNum(4)==true);
+	boleanTest.push_back(s1.addSessionByNum(6)==true);
+	boleanTest.push_back(s1.addSessionByNum(5)==true);
+	boleanTest.push_back(s1.updSesResultByIndex(Result{ "test1", 5 }, 3, 0)==true);
+	boleanTest.push_back(s1.updSesResultByIndex(Result{ "test1", 5 }, 1, 10)==false);
+	boleanTest.push_back(s1.updSesResultByIndex(Result{ "test1", 5 }, 777, 1)==false);
+	boleanTest.push_back(s1.addSesResult(Result{ "test0", 5 }, 5)==true);
+	s1.addSesResult(Result{ "test1", 5 }, 5);
+	s1.addSesResult(Result{ "test2", 5 }, 5);
+	s1.addSesResult(Result{ "test3", 5 }, 5);
+	boleanTest.push_back(s1.addSesResult(Result{ "test1", 5 }, 777)==false);
+	boleanTest.push_back(s1.deleteSesResultByIndex(5, 2)==true);
+	boleanTest.push_back(s1.deleteSesResultByIndex(5, 777)==false);
+	boleanTest.push_back(s1.setDateOfBorn(Date{ 12, 12, 2004 })==true);
+	boleanTest.push_back(s1.setDateOfBorn(Date{ 777, 777, 777 })==false);
+	for (int i = 0; i < boleanTest.size(); i++) {
+		if (boleanTest[i]) {
+			cout << "TEST " << i + 1 << " PASSED" << endl;
+		}
+		else {
+			cout << "TEST " << i + 1 << " FAILED" << endl;
+		}
+	}
+	return 0;
 }
