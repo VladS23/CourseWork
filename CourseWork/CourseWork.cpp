@@ -29,6 +29,12 @@ int main() {
     char* cc5 = s1.getName();
     char* cc6 = s1.getGender();
     Date d1 = s1.getDateOfBorn();
+    bool b1 = s1.setYearOfAdmission(1232);
+    bool b2 = s1.setYearOfAdmission(2018);
+    char ccc2[64] = ":ИИТ;";
+    bool b4 = s1.setFaculty(ccc2);
+    char ccc1[64] = "ИИТ";
+    bool b3 = s1.setFaculty(ccc1);
     int x = 5 + 9;
     return 0;
 }

@@ -270,3 +270,65 @@ char* Student::getNumGradebook()
 	}
 	return res;
 }
+
+Session Student::getSessionByIndex(int index)
+{
+	return sessions[index];
+}
+
+bool Student::setYearOfAdmission(int year)
+{
+	if (year > 1900 && year < 2050) {
+		yearOfAdmission = year;
+		return true;
+	}
+	return false;
+}
+
+bool Student::setFaculty(char newVal [64] )
+{
+	if (checkCharArray(newVal, 64))
+	{
+		for (int i = 0; i < 64; i++) {
+			faculty[i] = newVal[i];
+		}
+		return true;
+	}
+	return false;
+}
+
+bool Student::setDepartments(char newVal [64])
+{
+	if (checkCharArray(newVal, 64))
+	{
+		for (int i = 0; i < 64; i++) {
+			departments[i] = newVal[i];
+		}
+		return true;
+	}
+	return false;
+}
+
+bool Student::setGroup(char newVal [64])
+{
+	if (checkCharArray(newVal, 64))
+	{
+		for (int i = 0; i < 64; i++) {
+			group[i] = newVal[i];
+		}
+		return true;
+	}
+	return false;
+}
+
+bool Student::setNumGradebook(char newVal [16])
+{
+	if (checkCharArray(newVal, 16))
+	{
+		for (int i = 0; i < 16; i++) {
+			numGradebook[i] = newVal[i];
+		}
+		return true;
+	}
+	return false;
+}

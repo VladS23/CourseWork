@@ -17,12 +17,12 @@ public:
 	char* getDepartments();
 	char* getGroup();
 	char* getNumGradebook();
-	Session getSessionByIndex();
+	Session getSessionByIndex(int);
 	bool setYearOfAdmission(int);
 	bool setFaculty(char[64]);
 	bool setDepartments(char[64]);
 	bool setGroup(char[64]);
-	bool setNumGradeBook(char[64]);
+	bool setNumGradebook(char[16]);
 	bool deleteSessionByIndex(int);
 	bool addSession();
 	bool updSesResultByIndex(Result, int);
