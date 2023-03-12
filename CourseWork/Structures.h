@@ -3,7 +3,7 @@
 using namespace std;
 struct Date {
 	int day;
-	int mounth;
+	int month;
 	int year;
 };
 struct Result
