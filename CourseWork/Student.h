@@ -28,5 +28,6 @@ public:
 	bool updSesResultByIndex(Result res, int sesNum, int resInd);
 	bool addSesResult(Result res, int sesNum);
 	bool deleteSesResultByIndex(int sesNum, int resInd);
+	int getSessionsSize();
 	static int tests();
 };

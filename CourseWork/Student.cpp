@@ -434,6 +434,10 @@ bool Student::deleteSesResultByIndex(int sesNum, int resInd)
 	}
 	return false;
 }
+int Student::getSessionsSize()
+{
+	return sessions.size();
+}
 /// <summary>
 /// test all methods of programm
 /// </summary>
@@ -497,17 +501,49 @@ int Student::tests()
 	char dbt1[1024] = "Петров Петр Петрович:1.12.2003:2021:ИКБ:КБ-1:БАСО-01-21:Б0404:male:1:calculation:4:1:phys:3:2:programming:5:3:SecurityOS:4:4:SecurityDB:5;";
 	char dbt2[1024] = "Иванов Иван Иванович:1.12.2003:2021:ИКБ:КБ-1:БАСО-01-21:Б0404:male:1:calculation:4:1:phys:3:2:programming:5:3:SecurityOS:4:4:SecurityDB:5;";
 	Database db1;
-	db1.addStudent(dbt1);
+	db1.students.push_back(dbt1);
 	db1.students.push_back(Student(dbt2));
-	boleanTest.push_back(db1.saveDb());
+	boleanTest.push_back(db1.saveDb()==true);
 	char ccc3[64] = "D:\\students1.txt";
-	boleanTest.push_back(db1.loadDb(ccc3));
+	boleanTest.push_back(db1.loadDb(ccc3)==true);
+	char t1[] = "1,1,3,4,5,2.";
+	vector <Student> svec1;
+	boleanTest.push_back(db1.addFilter(t1, svec1) == false);
+	char indt1[1024] = "Петров Петр Петрович:1.12.2003:2342:ИКБ:КБ-1:БАСО-01-21:Б0404:male:1:test:5:1:test:5:2:test:5;";
+	char indt2[1024] = "Васильев Василий Василиевич:1.12.2003:3232:ИКБ:КБ-1:БАСО-01-21:Б0404:male:1:test:5:2:test:5:2:test:5:2:test:5:2:test:5;";
+	char indt3[1024] = "Тимофеев Тимофей Тимофеевич:1.12.2003:1411:ИКБ:КБ-1:БАСО-01-21:Б0404:male:1:test:5:1:test:5:1:test:5:3:test:5:3:test:5:3:test:5:3:test:5:3:test:5:3:test:5:3:test:5:3:test:5:3:test:5;";
+	char indt4[1024] = "Чаплин Чарли Чарлеевич:1.12.2003:4122:ИКБ:КБ-1:БАСО-01-21:Б0404:male:2:test:5:2:test:5:2:test:5:2:test:5:2:test:5:2:test:5;";
+	Database db2;
+	vector <Student> svec2;
+	db2.students.push_back(Student(indt1));
+	db2.students.push_back(Student(indt2));
+	db2.students.push_back(Student(indt3));
+	db2.students.push_back(Student(indt4));
+	char fl1[16]="1";
+	db2.addFilter(fl1, svec2);
+	boleanTest.push_back(svec2[0].getYearOfAdmission() == 1411 && svec2[1].getYearOfAdmission() == 2342 && svec2[2].getYearOfAdmission() == 3232 && svec2[3].getYearOfAdmission() == 4122);
+	svec2.clear();
+	char fl2[16] = "1,2";
+	db2.addFilter(fl2, svec2);
+	boleanTest.push_back(svec2[0].getYearOfAdmission() == 4122 && svec2[1].getYearOfAdmission() == 3232 && svec2[2].getYearOfAdmission() == 2342 && svec2[3].getYearOfAdmission() == 1411);
+	svec2.clear();
+	char fl3[16] = "1,2,3";
+	db2.addFilter(fl3, svec2);
+	boleanTest.push_back(svec2[0].getYearOfAdmission() == 1411 && svec2[1].getYearOfAdmission() == 4122 && svec2[2].getYearOfAdmission() == 3232 && svec2[3].getYearOfAdmission() == 2342);
+	svec2.clear();
+	char fl4[16] = "3";
+	db2.addFilter(fl4, svec2);
+	boleanTest.push_back(svec2[0].getYearOfAdmission() == 1411);
+	svec2.clear();
+	char fl5[16] = "777";
+	db2.addFilter(fl4, svec2);
+	svec2.clear();
 	for (int i = 0; i < boleanTest.size(); i++) {
 		if (boleanTest[i]) {
 			cout << "TEST " << i + 1 << " PASSED" << endl;
 		}
 		else {
-			cout << "TEST " << i + 1 << " FAILED" << endl;
+			cout << "!!!TEST " << i + 1 << " FAILED!!!" << endl;
 		}
 	}
 	return 0;
