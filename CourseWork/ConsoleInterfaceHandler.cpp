@@ -18,6 +18,7 @@ void ConsoleInterfaceHandler::StartPage()
 	cout << "2. Использовать существующую базу данных" << endl;
 	char options;
 	cin >> options;
+	while (fgetc(stdin) != '\n');
 	Database mainDB;
 	switch (options)
 	{
@@ -30,7 +31,8 @@ void ConsoleInterfaceHandler::StartPage()
 		case '2':
 			char path[256];
 			cout << "Введите путь до базы данных"<<endl;
-			cin >> path;
+			cin >> setw(256) >> path;
+			while (fgetc(stdin) != '\n');
 			if (mainDB.loadDb(path)) {
 				cTools.Clear();
 				cout << "База данных успешно загружена"<<endl;
@@ -69,8 +71,9 @@ void ConsoleInterfaceHandler::MainPage(Database db)
 		delete[] gender;
 		delete[] dateOfBorn;
 	}
-	char options[6];
-	cin >> options;
+	char options[7];
+	cin >> setw(7) >> options;
+	while (fgetc(stdin) != '\n');
 	static const regex r(R"(^[1-9]{0,6}$)");
 	if (regex_match(options, r)) {
 		int ind = atoi(options)-1;
@@ -109,7 +112,7 @@ void ConsoleInterfaceHandler::StudentPage(Student stud,Database db)
 	char* departments=stud.getDepartments();
 	char* group=stud.getGroup();
 	char* numGradebook=stud.getNumGradebook();
-	cout << "Данные студента:" << endl;
+	cout << "Данные студента:" << endl<<endl;
 	cTools.PrintSeparator(ConsoleTools::Separators::Simple);
 	cout << '|' << std::left << setw(4)<<"1" << '|' << setw(65) << name << "|" << setw(4)<< "5" << '|' << setw(42) << faculty << '|' << endl;
 	cTools.PrintSeparator(ConsoleTools::Separators::PersonalCard);
@@ -139,13 +142,15 @@ void ConsoleInterfaceHandler::FiltredStud(Database db)
 	vector <Student> filtred;
 	cTools.Clear();
 	cout << "Введите номера сессии, по которым необходимо фильтровать через запятую, без пробелов" << endl;
-	cin >> filter;
+	cin >>setw(64) >> filter;
+	while (fgetc(stdin) != '\n');
 	fl = db.addFilter(filter, filtred);
 	while(!fl) {
 		cTools.Clear();
 		cout << "Неверные номера сессий"<<endl;
 		cout << "Введите номера сессии, по которым необходимо фильтровать через запятую, без пробелов" << endl;
-		cin >> filter;
+		cin >> setw(64) >> filter;
+		while (fgetc(stdin) != '\n');
 		fl = db.addFilter(filter, filtred);
 	}
 	cTools.PrintSeparator(ConsoleTools::Separators::Simple);
@@ -163,9 +168,11 @@ void ConsoleInterfaceHandler::FiltredStud(Database db)
 	}
 	cout << "Нажмите 0 чтобы вернуться в главное меню" << endl;
 	char c;
-	cin >> noskipws >> c;
+	cin >> c;
+	while (fgetc(stdin) != '\n');
 	while (c != '0') {
-		cin >> noskipws >> c;
+		cin >> c;
+		while (fgetc(stdin) != '\n');
 	}
 	MainPage(db);
 }

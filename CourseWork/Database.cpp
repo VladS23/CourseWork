@@ -131,10 +131,13 @@ bool Database::addFilter(char filtersStr[64], vector <Student>& filtred)
 		while (filtersStr[i] != '\0') {
 			char sesNum[4];
 			int j = 0;
-			while (filtersStr[i] != '\0' && filtersStr[i] != ',') {
+			while (i<4 && filtersStr[i] != '\0' && filtersStr[i] != ',') {
 				sesNum[j] = filtersStr[i];
 				i++;
 				j++;
+			}
+			if (i == 4) {
+				return false;
 			}
 			j++;
 			sesNum[j] = '\0';
