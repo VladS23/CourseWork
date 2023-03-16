@@ -1,12 +1,14 @@
 #include "Student.h"
 #include "Person.h"
 #include "Database.h"
+#include"CryptoTools.h"
 #include <vector>
 #include <iostream>
 #include <charconv>
+
 /// <summary>
-/// Строка инициализации состоит из данных разделеных : в конце ; 
-/// формат строки "ФИО:Дата рождения:Год поступления:Институт:факультет:Кафедра:Группа:Номер Зачетки:Номер сессии1:предмет1:оценка1:Номер сессии1:предметn:оценкаn6:Номер сессииk:предметm:оценкаm;"
+/// Строка инициализации состоит из данных разделеных : в конце и начале ; 
+/// формат строки ";ФИО:Дата рождения:Год поступления:Институт:факультет:Кафедра:Группа:Номер Зачетки:Номер сессии1:предмет1:оценка1:Номер сессии1:предметn:оценкаn6:Номер сессииk:предметm:оценкаm;"
 /// оценки за сесию должны быть отсортированы по возрастанию номера сессии, к которой они относятся 
 /// </summary>
 /// <param name="initString"></param>
@@ -14,127 +16,131 @@ Student::Student(char initString [10240]) {
 	//вектор для хранения данных разбитых по :
 	vector <dataEl> initVector;
 	int i = 0;
-	while (initString[i] != ';') {
-		//в вектор нельзя добавить массив, поэтому обернем его в структуру
-		dataEl curDataEl;
-		//инициализируем массив нуль символами
-		int k = 0;
-		while (k < 64 && curDataEl.chars[k] != '\0') {
-			curDataEl.chars[k] = '\0';
-			k++;
-		}
-		int j = 0;
-		//разбиваем строку по : в масиивы символов
-		while (initString[i] != ':' && initString[i+1] != ';') {
-			curDataEl.chars[j] = initString[i];
+	if (initString[i] == ';') {
+		i++;
+		while (initString[i] != ';') {
+			//в вектор нельзя добавить массив, поэтому обернем его в структуру
+			dataEl curDataEl;
+			//инициализируем массив нуль символами
+			int k = 0;
+			while (k < 64 && curDataEl.chars[k] != '\0') {
+				curDataEl.chars[k] = '\0';
+				k++;
+			}
+			int j = 0;
+			//разбиваем строку по : в масиивы символов
+			while (initString[i] != ':' && initString[i + 1] != ';') {
+				curDataEl.chars[j] = initString[i];
+				i++;
+				j++;
+			}
+			if (initString[i + 1] == ';') {
+				curDataEl.chars[j] = initString[i];
+			}
 			i++;
-			j++;
+			//добавляем получившийся массив в вектор
+			initVector.push_back(curDataEl);
 		}
-		if(initString[i + 1] == ';') {
-			curDataEl.chars[j] = initString[i];
-		}
-		i++;
-		//добавляем получившийся массив в вектор
-		initVector.push_back(curDataEl);
-	}
-	i = 0;
-	int curentInitVecEl = 0;
-	//записываем первый элемент вектора в фио
-	while (i < 64) {
-		name[i] = initVector[curentInitVecEl].chars[i];
-		i++;
-	}
-	curentInitVecEl++;
-	i = 0;
-	int date[3];
-	int curDateEl = 0;
-	//разбиваем второй элемент по .
-	while (initVector[curentInitVecEl].chars[i] != '\0')
-	{
-		char curInt[8] = {'0'};
-		int k = 0;
-		while (initVector[curentInitVecEl].chars[i] != '.'  && initVector[curentInitVecEl].chars[i] != '\0') {
-			curInt[k] = initVector[curentInitVecEl].chars[i];
-			i++;
-			k++;
-		}
-		i++;
-		//преобразуем каждый из получившихся массивов к инту и добавим в массив
-		date[curDateEl] = atoi(curInt);
-		curDateEl++;
-	}
-	//на основании массива инициализируем структуру для хранения даты рождения
-	dateOfBorn.day = date[0];
-	dateOfBorn.month = date[1];
-	dateOfBorn.year = date[2];
-	i = 0;
-	curentInitVecEl++;
-	//запишем следующий элемент вектора в дату поступления, преобразовав его к инту
-	yearOfAdmission = atoi(initVector[curentInitVecEl].chars);
-	curentInitVecEl++;
-	//инициализируем институт следующим элементом вектора
-	while (i < 64) {
-		faculty[i] = initVector[curentInitVecEl].chars[i];
-		i++;
-	}
-	curentInitVecEl++;
-	i = 0;
-	//инициализируем кафедру следующим элементом вектора
-	while (i < 64) {
-		departments[i] = initVector[curentInitVecEl].chars[i];
-		i++;
-	}
-	curentInitVecEl++;
-	i = 0;
-	//инициализируем группу следующим элементом вектора
-	while (i < 16) {
-		group[i] = initVector[curentInitVecEl].chars[i];
-		i++;
-	}
-	curentInitVecEl++;
-	i = 0;
-	//инициализируем зачетку следующим элементом вектора
-	while (i < 16) {
-		numGradebook[i] = initVector[curentInitVecEl].chars[i];
-		i++;
-	}
-	curentInitVecEl++;
-	i = 0;
-	//инициализируем пол следующим элементом вектора
-	while (i < 32) {
-		gender[i] = initVector[curentInitVecEl].chars[i];
-		i++;
-	}
-	curentInitVecEl++;
-	int prevSession = 0;
-	int curSesIterator = -1;
-	while (curentInitVecEl< initVector.size())
-	{
-		if (atoi(initVector[curentInitVecEl].chars) > prevSession) {
-			Session curSes;
-			prevSession = atoi(initVector[curentInitVecEl].chars);
-			curSes.numSesion = atoi(initVector[curentInitVecEl].chars);
-			sessions.push_back(curSes);
-			curSesIterator++;
-			curentInitVecEl++;
-		}
-		else {
-			curentInitVecEl++;
-		}
-		Result curOneRes;
-		int i = 0;
+		i = 0;
+		int curentInitVecEl = 0;
+		//записываем первый элемент вектора в фио
 		while (i < 64) {
-			curOneRes.subName[i] = initVector[curentInitVecEl].chars[i];
+			name[i] = initVector[curentInitVecEl].chars[i];
 			i++;
 		}
 		curentInitVecEl++;
-		curOneRes.grading = atoi(initVector[curentInitVecEl].chars);
-		sessions[curSesIterator].oneRes.push_back(curOneRes);
+		i = 0;
+		int date[3];
+		int curDateEl = 0;
+		//разбиваем второй элемент по .
+		while (initVector[curentInitVecEl].chars[i] != '\0')
+		{
+			char curInt[8] = { '0' };
+			int k = 0;
+			while (initVector[curentInitVecEl].chars[i] != '.' && initVector[curentInitVecEl].chars[i] != '\0') {
+				curInt[k] = initVector[curentInitVecEl].chars[i];
+				i++;
+				k++;
+			}
+			i++;
+			//преобразуем каждый из получившихся массивов к инту и добавим в массив
+			date[curDateEl] = atoi(curInt);
+			curDateEl++;
+		}
+		//на основании массива инициализируем структуру для хранения даты рождения
+		dateOfBorn.day = date[0];
+		dateOfBorn.month = date[1];
+		dateOfBorn.year = date[2];
+		i = 0;
 		curentInitVecEl++;
+		//запишем следующий элемент вектора в дату поступления, преобразовав его к инту
+		yearOfAdmission = atoi(initVector[curentInitVecEl].chars);
+		curentInitVecEl++;
+		//инициализируем институт следующим элементом вектора
+		while (i < 64) {
+			faculty[i] = initVector[curentInitVecEl].chars[i];
+			i++;
+		}
+		curentInitVecEl++;
+		i = 0;
+		//инициализируем кафедру следующим элементом вектора
+		while (i < 64) {
+			departments[i] = initVector[curentInitVecEl].chars[i];
+			i++;
+		}
+		curentInitVecEl++;
+		i = 0;
+		//инициализируем группу следующим элементом вектора
+		while (i < 16) {
+			group[i] = initVector[curentInitVecEl].chars[i];
+			i++;
+		}
+		curentInitVecEl++;
+		i = 0;
+		//инициализируем зачетку следующим элементом вектора
+		while (i < 16) {
+			numGradebook[i] = initVector[curentInitVecEl].chars[i];
+			i++;
+		}
+		curentInitVecEl++;
+		i = 0;
+		//инициализируем пол следующим элементом вектора
+		while (i < 32) {
+			gender[i] = initVector[curentInitVecEl].chars[i];
+			i++;
+		}
+		curentInitVecEl++;
+		int prevSession = 0;
+		int curSesIterator = -1;
+		while (curentInitVecEl < initVector.size())
+		{
+			if (atoi(initVector[curentInitVecEl].chars) > prevSession) {
+				Session curSes;
+				prevSession = atoi(initVector[curentInitVecEl].chars);
+				curSes.numSesion = atoi(initVector[curentInitVecEl].chars);
+				sessions.push_back(curSes);
+				curSesIterator++;
+				curentInitVecEl++;
+			}
+			else {
+				curentInitVecEl++;
+			}
+			Result curOneRes;
+			int i = 0;
+			while (i < 64) {
+				curOneRes.subName[i] = initVector[curentInitVecEl].chars[i];
+				i++;
+			}
+			curentInitVecEl++;
+			curOneRes.grading = atoi(initVector[curentInitVecEl].chars);
+			sessions[curSesIterator].oneRes.push_back(curOneRes);
+			curentInitVecEl++;
+		}
 	}
 }
 vector<char> Student::toCharVec() {
 	vector<char> result;
+	result.push_back(';');
 	int i = 0;
 	while (name[i] != '\0') {
 		result.push_back(name[i]);
@@ -233,6 +239,7 @@ vector<char> Student::toCharVec() {
 		}
 	}
 	result[result.size() - 1] = ';';
+	result.push_back('\n');
 	return result;
 }
 
@@ -444,7 +451,7 @@ int Student::getSessionsSize()
 /// <returns></returns>
 int Student::tests()
 {
-	char c1[1024] = "Петров Петр Петрович:1.12.2003:2021:ИКБ:КБ-1:БАСО-01-21:Б0404:male:1:calculation:4:1:phys:3:2:programming:5:3:SecurityOS:4:4:SecurityDB:5;";
+	char c1[1024] = ";Петров Петр Петрович:1.12.2003:2021:ИКБ:КБ-1:БАСО-01-21:Б0404:male:1:calculation:4:1:phys:3:2:programming:5:3:SecurityOS:4:4:SecurityDB:5;";
 	Student s1(c1);
 	int y = 5 + 9;
 	vector <char> v1 = s1.toCharVec();
@@ -498,21 +505,21 @@ int Student::tests()
 	boleanTest.push_back(s1.deleteSesResultByIndex(5, 777)==false);
 	boleanTest.push_back(s1.setDateOfBorn(Date{ 12, 12, 2004 })==true);
 	boleanTest.push_back(s1.setDateOfBorn(Date{ 777, 777, 777 })==false);
-	char dbt1[1024] = "Петров Петр Петрович:1.12.2003:2021:ИКБ:КБ-1:БАСО-01-21:Б0404:male:1:calculation:4:1:phys:3:2:programming:5:3:SecurityOS:4:4:SecurityDB:5;";
-	char dbt2[1024] = "Иванов Иван Иванович:1.12.2003:2021:ИКБ:КБ-1:БАСО-01-21:Б0404:male:1:calculation:4:1:phys:3:2:programming:5:3:SecurityOS:4:4:SecurityDB:5;";
-	Database db1;
-	db1.students.push_back(dbt1);
-	db1.students.push_back(Student(dbt2));
-	boleanTest.push_back(db1.saveDb()==true);
-	char ccc3[64] = "D:\\students1.txt";
-	boleanTest.push_back(db1.loadDb(ccc3)==true);
-	char t1[] = "1,1,3,4,5,2.";
-	vector <Student> svec1;
-	boleanTest.push_back(db1.addFilter(t1, svec1) == false);
-	char indt1[1024] = "Петров Петр Петрович:1.12.2003:2342:ИКБ:КБ-1:БАСО-01-21:Б0404:male:1:test:5:1:test:5:2:test:5;";
-	char indt2[1024] = "Васильев Василий Василиевич:1.12.2003:3232:ИКБ:КБ-1:БАСО-01-21:Б0404:male:1:test:5:2:test:5:2:test:5:2:test:5:2:test:5;";
-	char indt3[1024] = "Тимофеев Тимофей Тимофеевич:1.12.2003:1411:ИКБ:КБ-1:БАСО-01-21:Б0404:male:1:test:5:1:test:5:1:test:5:3:test:5:3:test:5:3:test:5:3:test:5:3:test:5:3:test:5:3:test:5:3:test:5:3:test:5;";
-	char indt4[1024] = "Чаплин Чарли Чарлеевич:1.12.2003:4122:ИКБ:КБ-1:БАСО-01-21:Б0404:male:2:test:5:2:test:5:2:test:5:2:test:5:2:test:5:2:test:5;";
+	char dbt1[1024] = ";Петров Петр Петрович:1.12.2003:2021:ИКБ:КБ-1:БАСО-01-21:Б0404:male:1:calculation:4:1:phys:3:2:programming:5:3:SecurityOS:4:4:SecurityDB:5;";
+	char dbt2[1024] = ";Иванов Иван Иванович:1.12.2003:2021:ИКБ:КБ-1:БАСО-01-21:Б0404:male:1:calculation:4:1:phys:3:2:programming:5:3:SecurityOS:4:4:SecurityDB:5;";
+	//Database db1;
+	//db1.students.push_back(dbt1);
+	//db1.students.push_back(Student(dbt2));
+	//boleanTest.push_back(db1.saveDb()==true);
+	//char ccc3[64] = "D:\\students1.txt";
+	//boleanTest.push_back(db1.loadDb(ccc3)==true);
+	//char t1[] = "1,1,3,4,5,2.";
+	//vector <Student> svec1;
+	//boleanTest.push_back(db1.addFilter(t1, svec1) == false);
+	char indt1[1024] = ";Петров Петр Петрович:1.12.2003:2342:ИКБ:КБ-1:БАСО-01-21:Б0404:male:1:test:5:1:test:5:2:test:5;";
+	char indt2[1024] = ";Васильев Василий Василиевич:1.12.2003:3232:ИКБ:КБ-1:БАСО-01-21:Б0404:male:1:test:5:2:test:5:2:test:5:2:test:5:2:test:5;";
+	char indt3[1024] = ";Тимофеев Тимофей Тимофеевич:1.12.2003:1411:ИКБ:КБ-1:БАСО-01-21:Б0404:male:1:test:5:1:test:5:1:test:5:3:test:5:3:test:5:3:test:5:3:test:5:3:test:5:3:test:5:3:test:5:3:test:5:3:test:5;";
+	char indt4[1024] = ";Чаплин Чарли Чарлеевич:1.12.2003:4122:ИКБ:КБ-1:БАСО-01-21:Б0404:male:2:test:5:2:test:5:2:test:5:2:test:5:2:test:5:2:test:5;";
 	Database db2;
 	vector <Student> svec2;
 	db2.students.push_back(Student(indt1));
@@ -538,6 +545,16 @@ int Student::tests()
 	char fl5[16] = "777";
 	db2.addFilter(fl4, svec2);
 	svec2.clear();
+	db2.saveDb();
+	char pathdb2[] = "D:\\students.txt";
+	db2.loadDb(pathdb2);
+	char chch[] = "УРАУРА";
+	db2.students[2].setName(chch);
+	auto vcdb2 = db2.students[2].toCharVec();
+	for (int i = 0; i < vcdb2.size(); i++) {
+		std::cout << vcdb2[i];
+	}
+	std::cout << endl;
 	for (int i = 0; i < boleanTest.size(); i++) {
 		if (boleanTest[i]) {
 			cout << "TEST " << i + 1 << " PASSED" << endl;

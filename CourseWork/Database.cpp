@@ -4,6 +4,8 @@
 #include <string>
 #include <regex>
 #include <set>
+#include <string.h>
+#include <iostream>
 
 using namespace std;
 
@@ -41,20 +43,23 @@ Database::Database() {
 bool Database::loadDb(char* dbPath)
 {
 	students.clear();
-	std::string line;
-	std::ifstream in(dbPath);
+	byte buf;
+	std::ifstream in(dbPath, std::ios::binary);
+	vector <byte> initString;
 	if (in.is_open())
 	{
-		while (getline(in, line))
-		{
-			char* chars = new char[line.length()];
-			const char* lc = line.c_str();
-			for (int i = 0; i < line.length(); i++) {
-				chars[i] = lc[i];
-			}
-			students.push_back(Student(chars));
+		while (in >> noskipws >> buf) {
+			initString.push_back(buf);
 		}
 	}
+	char* plaintext = new char[initString.size()];
+	for (int i = 0; i < initString.size(); i++) {
+		plaintext[i] = initString[i];
+	}
+	crypt.Decrypt(plaintext, initString.size());
+	SetConsoleCP(1251);
+	SetConsoleOutputCP(1251);
+	std::cout << plaintext;
 	bool fl = in.is_open();
 	in.close();
 	return fl;
@@ -63,25 +68,36 @@ bool Database::loadDb(char* dbPath)
 bool Database::saveDb()
 {
 	std::ofstream out;
-	out.open(DbPath, std::ios_base::out);
+	out.open(DbPath, std::ios::out|std::ios::binary);
+	vector<char> allStud;
 	if (out.is_open())
 	{
 		for (int i=0; i<students.size();i++){
 			vector<char> buff = students[i].toCharVec();
-			char* buffer = new char[buff.size()+1];
-			int j=0;
-			while (buff[j]!=';') {
-				buffer[j] = buff[j];
-				j++;
+			for (int j = 0; j < buff.size(); j++) {
+				allStud.push_back(buff[j]);
 			}
-			buffer[j] = ';';
-			buffer[j+1] = '\0';
-			out << buffer<<endl;
-			delete[] buffer;
 		}
 	}
+	char* encrText = new char[allStud.size()+1];
+	int y = 0;
+	for (int i = 0; i < allStud.size(); i++) {
+		encrText[i] = allStud[i];
+		y = i;
+	}
+	encrText[y+1] = '\0';
+	SetConsoleCP(1251);
+	//std::cout <<endl<<strlen(encrText)<<endl<< allStud.size()<<endl;
+	crypt.Crypt(encrText, allStud.size());
+
+	for (int i = 0; i < allStud.size();i++) {
+		out << noskipws << encrText[i];
+	}
+
+	delete[] encrText;
 	bool fl = out.is_open();
 	out.close();
+	auto x = 9;
 	return fl;
 }
 
