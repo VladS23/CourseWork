@@ -161,7 +161,6 @@ bool Database::addFilter(char filtersStr[64], vector <Student>& filtred)
 			temp.erase(temp.begin() + maxInd);
 			ses5.erase(ses5.begin() + maxInd);
 		}
-		auto debudStop = 8;
 		return true;
 	}
 	return false;
