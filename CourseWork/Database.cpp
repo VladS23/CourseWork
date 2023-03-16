@@ -46,6 +46,9 @@ bool Database::loadDb(char* dbPath)
 	byte buf;
 	std::ifstream in(dbPath, std::ios::binary);
 	vector <byte> initString;
+	if (!in.is_open()) {
+		return false;
+	}
 	if (in.is_open())
 	{
 		while (in >> noskipws >> buf) {

@@ -10,10 +10,10 @@ void ErrorExit(LPTSTR lpszFunction)
 }
 void MyHandleError(char* s)
 {
-    printf("An error occurred in running the program.\n");
+    printf("Ошибка при работе программы.\n");
     printf("%s\n", s);
-    printf("Error number %x\n.", GetLastError());
-    printf("Program terminating.\n");
+    printf("Номер ошибки %x\n.", GetLastError());
+    printf("Программа завершена.\n");
     exit(1);
 }
 void CryptoTools::MyHandleError(char* s)
@@ -29,7 +29,7 @@ CryptoTools::~CryptoTools()
     if (hHash)
     {
         if (!(CryptDestroyHash(hHash))) {
-            char er[32] = "Error during CryptDestroyHash";
+            char er[32] = "Ошибка при уничтожении хеша";
             MyHandleError(er);
         }
     }
@@ -38,7 +38,7 @@ CryptoTools::~CryptoTools()
     if (hKey)
     {
         if (!(CryptDestroyKey(hKey))) {
-            char er[32] = "Error during CryptDestroyKey";
+            char er[32] = "Ошибка уничтожения ключа";
             MyHandleError(er);
         }
     }
@@ -47,7 +47,7 @@ CryptoTools::~CryptoTools()
     if (hCryptProv)
     {
         if (!(CryptReleaseContext(hCryptProv, 0))) {
-            char er[34] = "Error during CryptReleaseContext";
+            char er[34] = "Ошибка реализации контекста";
             MyHandleError(er);
         }
     }
@@ -57,11 +57,10 @@ CryptoTools::CryptoTools() {
     //----------------------------------------------------------------
     // Get the password from the user.
 
-    fprintf(stderr, "Enter a password to be used to create a key:");
+    fprintf(stderr, "Введите пароль для генерации ключа: ");
 
     // Get a password while printing only asterisks to the screen.
     GetConsoleInput(szPassword, PASSWORD_LENGTH);
-    printf("The password has been stored.\n");
     dwLength = (DWORD)strlen(szPassword);
 
     //----------------------------------------------------------------
@@ -74,11 +73,11 @@ CryptoTools::CryptoTools() {
         PROV_RSA_FULL,
         0))
     {
-        printf("A context has been acquired. \n");
+        printf("Контекст был получен \n");
     }
     else
     {
-        char er[34] = "Error during CryptAcquireContext!";
+        char er[34] = "Ошибка получения контекста";
         MyHandleError(er);
     }
     //----------------------------------------------------------------
@@ -91,11 +90,11 @@ CryptoTools::CryptoTools() {
         0,
         &hHash))
     {
-        printf("An empty hash object has been created. \n");
+        printf("Пустой объект хеша создан \n");
     }
     else
     {
-        char er[32] = "Error during CryptCreateHash!";
+        char er[33] = "Ошибка при создании пустого хеша";
         MyHandleError(er);
     }
     //----------------------------------------------------------------
@@ -107,11 +106,11 @@ CryptoTools::CryptoTools() {
         dwLength,
         0))
     {
-        printf("The password has been hashed. \n");
+        printf("Пароль был создан \n");
     }
     else
     {
-        char er[32] = "Error during CryptHashData!";
+        char er[32] = "Ошибка создания пароля";
         MyHandleError(er);
     }
     //----------------------------------------------------------------
@@ -124,11 +123,11 @@ CryptoTools::CryptoTools() {
         CRYPT_EXPORTABLE,
         &hKey))
     {
-        printf("The key has been derived. \n");
+        printf("Ключ был создан \n");
     }
     else
     {
-        char er[32] = "Error during CryptDeriveKey!";
+        char er[32] = "Ошибка создания ключа";
         MyHandleError(er);
     }
 

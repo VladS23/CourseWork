@@ -139,6 +139,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ConsoleInterfaceHandler.cpp" />
     <ClCompile Include="CourseWork.cpp" />
     <ClCompile Include="CryptoTools.cpp" />
     <ClCompile Include="Database.cpp" />
@@ -147,6 +148,7 @@
     <ClCompile Include="Student.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ConsoleInterfaceHandler.h" />
     <ClInclude Include="CryptoTools.h" />
     <ClInclude Include="Database.h" />
     <ClInclude Include="Person.h" />
