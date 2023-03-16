@@ -549,6 +549,11 @@ int Student::tests()
 	char pathdb2[] = "D:\\students.txt";
 	db2.loadDb(pathdb2);
 	char chch[] = "”–¿”–¿";
+	auto vcdb1 = db2.students[1].toCharVec();
+	for (int i = 0; i < vcdb1.size(); i++) {
+		std::cout << vcdb1[i];
+	}
+	std::cout << endl;
 	db2.students[2].setName(chch);
 	auto vcdb2 = db2.students[2].toCharVec();
 	for (int i = 0; i < vcdb2.size(); i++) {

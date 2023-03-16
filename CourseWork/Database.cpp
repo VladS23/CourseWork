@@ -57,9 +57,27 @@ bool Database::loadDb(char* dbPath)
 		plaintext[i] = initString[i];
 	}
 	crypt.Decrypt(plaintext, initString.size());
-	SetConsoleCP(1251);
-	SetConsoleOutputCP(1251);
+	int count=0;
+	vector<char> initVector;
 	std::cout << plaintext;
+	for (int i = 0; i < strlen(plaintext); i++) {
+		if (plaintext[i] == ';') {
+			count++;
+		}
+		if (count == 1) {
+			initVector.push_back(plaintext[i]);
+		}
+		if (count == 2) {
+			initVector.push_back(plaintext[i]);
+			char* initArr = new char[initVector.size()];
+			for (int j = 0; j < initVector.size(); j++) {
+				initArr[j] = initVector[j];
+			}
+			count = 0;
+			initVector.clear();
+			this->students.push_back(Student((initArr)));
+		}
+	}
 	bool fl = in.is_open();
 	in.close();
 	return fl;
@@ -86,7 +104,6 @@ bool Database::saveDb()
 		y = i;
 	}
 	encrText[y+1] = '\0';
-	SetConsoleCP(1251);
 	//std::cout <<endl<<strlen(encrText)<<endl<< allStud.size()<<endl;
 	crypt.Crypt(encrText, allStud.size());
 
