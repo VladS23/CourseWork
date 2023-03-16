@@ -557,7 +557,7 @@ int Student::tests()
 	db2.students[2].setName(chch);
 	auto vcdb2 = db2.students[2].toCharVec();
 	for (int i = 0; i < vcdb2.size(); i++) {
-		std::cout << vcdb2[i];
+		//std::cout << vcdb2[i];
 	}
 	std::cout << endl;
 	for (int i = 0; i < boleanTest.size(); i++) {

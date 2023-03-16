@@ -59,7 +59,7 @@ bool Database::loadDb(char* dbPath)
 	crypt.Decrypt(plaintext, initString.size());
 	int count=0;
 	vector<char> initVector;
-	std::cout << plaintext;
+	//std::cout << plaintext;
 	for (int i = 0; i < strlen(plaintext); i++) {
 		if (plaintext[i] == ';') {
 			count++;
