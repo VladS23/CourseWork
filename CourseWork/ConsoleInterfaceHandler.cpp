@@ -74,7 +74,7 @@ void ConsoleInterfaceHandler::MainPage(Database db)
 	char options[7];
 	cin >> setw(7) >> options;
 	while (fgetc(stdin) != '\n');
-	static const regex r(R"(^[1-9]{0,6}$)");
+	static const regex r(R"(^[0-9]{0,6}$)");
 	if (regex_match(options, r)) {
 		int ind = atoi(options)-1;
 		if (ind >= 0 && ind < db.students.size()) {
@@ -133,6 +133,107 @@ void ConsoleInterfaceHandler::StudentPage(Student stud,Database db)
 
 void ConsoleInterfaceHandler::CreateStudentPage(Database db)
 {
+	char yearOfAdmission[8];
+	char faculty[64];
+	char departments[64];
+	char group[16];
+	char numGradebook[16];
+	char name[64];
+	char dateOfBorn[16];
+	char gender[32];
+	vector <char> InitVector;
+	InitVector.push_back(';');
+	cTools.Clear();
+	cout << "Создать студента" << endl << endl;
+	bool fl = false;
+	cout << "Введите ФИО" << endl;
+	cin >> setw(64) >> name;
+	name[63] = '\0';
+	while (fgetc(stdin) != '\n');
+	for (int i = 0; i < strlen(name)-1; i++) {
+		InitVector.push_back(name[i]);
+	}
+	InitVector.push_back(':');
+	cout << "Введите дату рождения через точку" << endl;
+	cin >> setw(16) >> dateOfBorn;
+	dateOfBorn[15] = '\0';
+	while (fgetc(stdin) != '\n');
+	for (int i = 0; i < strlen(dateOfBorn)-1; i++) {
+		InitVector.push_back(dateOfBorn[i]);
+	}
+	InitVector.push_back(':');
+	cout << "Введите пол" << endl;
+	cin >> setw(32) >> gender;
+	gender[31] = '\0';
+	while (fgetc(stdin) != '\n');
+	for (int i = 0; i < strlen(gender) - 1; i++) {
+		InitVector.push_back(gender[i]);
+	}
+	InitVector.push_back(':');
+	cout << "Введите год поступления"<<endl;
+	fl = false;
+	cin >> setw(8) >> yearOfAdmission;
+	yearOfAdmission[7] = '\0';
+	while (fgetc(stdin) != '\n');
+	static const regex r(R"(^[0-9]{0,4}$)");
+	if (regex_match(yearOfAdmission, r)) { 
+		fl = true; 
+	}
+	while (!fl) {
+		cout << "Введите год поступления" << endl;
+		cin >> setw(8) >> yearOfAdmission;
+		yearOfAdmission[7] = '\0';
+		while (fgetc(stdin) != '\n');
+		static const regex r(R"(^[0-9]{0,4}$)");
+		if (regex_match(yearOfAdmission, r)) {
+			fl = true;
+		}
+	}
+	for (int i = 0; i < strlen(yearOfAdmission) - 1; i++) {
+		InitVector.push_back(yearOfAdmission[i]);
+	}
+	InitVector.push_back(':');
+	cout << "Введите факультет" << endl;
+	cin >> setw(64) >> faculty;
+	faculty[63] = '\0';
+	while (fgetc(stdin) != '\n');
+	for (int i = 0; i < strlen(faculty) - 1; i++) {
+		InitVector.push_back(faculty[i]);
+	}
+	InitVector.push_back(':');
+	cout << "Введите кафедру" << endl;
+	cin >> setw(64) >> departments;
+	departments[63] = '\0';
+	while (fgetc(stdin) != '\n');
+	for (int i = 0; i < strlen(departments) - 1; i++) {
+		InitVector.push_back(departments[i]);
+	}
+	InitVector.push_back(':');
+	cout << "Введите группу" << endl;
+	cin >> setw(16) >> group;
+	group[15] = '\0';
+	while (fgetc(stdin) != '\n');
+	for (int i = 0; i < strlen(group) - 1; i++) {
+		InitVector.push_back(group[i]);
+	}
+	InitVector.push_back(':');
+	cout << "Введите номер студенческого билета" << endl;
+	cin >> setw(16) >> numGradebook;
+	numGradebook[15] = '\0';
+	while (fgetc(stdin) != '\n');
+	for (int i = 0; i < strlen(numGradebook) - 1; i++) {
+		InitVector.push_back(numGradebook[i]);
+	}
+	InitVector.push_back(';');
+	char* initChars = new char[InitVector.size()];
+	for (int i = 0; i < InitVector.size(); i++) {
+		initChars[i] = InitVector[i];
+	}
+	db.students.push_back(Student(initChars));
+	cTools.Clear();
+	cout << "Студент успешно добавлен";
+	Sleep(1000);
+	MainPage(db);
 }
 
 void ConsoleInterfaceHandler::FiltredStud(Database db)
@@ -154,7 +255,7 @@ void ConsoleInterfaceHandler::FiltredStud(Database db)
 		fl = db.addFilter(filter, filtred);
 	}
 	cTools.PrintSeparator(ConsoleTools::Separators::Simple);
-	cout << '|' << std::left << setw(5) << "ID" << '|' << setw(70) << "ФИО" << '|' << "Дата рождения" << '|' << setw(27) << "Пол" << '|' << endl;
+	cout << '|' << std::left << setw(5) << "ID" << '|' << setw(70) << "ФИО" << '|' << "Дата рождения" << '|' << setw(27) << "Пол" << '|' << endl<<endl;
 	cTools.PrintSeparator(ConsoleTools::Separators::Students);
 	for (int i = 0; i < filtred.size(); i++) {
 		char* name = filtred[i].getName();
