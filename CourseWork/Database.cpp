@@ -81,6 +81,10 @@ bool Database::loadDb(char* dbPath)
 			this->students.push_back(Student((initArr)));
 		}
 	}
+	if (students.size() == 0) {
+		cout << "Неверный пароль" << endl;
+		exit(0);
+	}
 	bool fl = in.is_open();
 	in.close();
 	return fl;
