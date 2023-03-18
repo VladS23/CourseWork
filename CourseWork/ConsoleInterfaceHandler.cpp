@@ -55,7 +55,7 @@ void ConsoleInterfaceHandler::StartPage()
 void ConsoleInterfaceHandler::MainPage(Database db)
 {
 	cTools.Clear();
-	cout << "Для просмотра или изменения записи введите ее номер, чтобы добавить запись введите 0, для применения фильтров введите 999999"<<endl;
+	cout << "Для просмотра или изменения записи введите ее номер, чтобы добавить запись введите 0, для применения фильтров введите f, для сохранения базы данных введите s"<<endl;
 	cTools.PrintSeparator(ConsoleTools::Separators::Simple);
 	cout << "|Студенты" << setw(111) << "|"<<endl;
 	cTools.PrintSeparator(ConsoleTools::Separators::Students);
@@ -83,15 +83,18 @@ void ConsoleInterfaceHandler::MainPage(Database db)
 		else if(ind==-1) {
 			CreateStudentPage(db);
 		}
-		else if (ind == 999998) {
-			FiltredStud(db);
-		}
 		else {
 			cout << "Некорректный номер" << endl;
 			Sleep(1000);
 			MainPage(db);
 			cTools.Clear();
 		}
+	}
+	else if (options[0]=='f') {
+		FiltredStud(db);
+	}
+	else if(options[0] == 's'){
+		SavePage(db);
 	}
 	else {
 		cTools.Clear();
@@ -122,11 +125,17 @@ void ConsoleInterfaceHandler::StudentPage(Student stud,Database db)
 	cTools.PrintSeparator(ConsoleTools::Separators::PersonalCard);
 	cout << '|' << std::left << setw(4) << "4" << '|' << setw(65) << yearOfAdmission << "|" << setw(4) << "8" << '|' << setw(42) << numGradebook << '|' << endl;
 	cTools.PrintSeparator(ConsoleTools::Separators::Simple);
-	cout << std::left <<  "|"<<setw(4)<<"9"<<"|"<<"Обнаружены сессии под номерами : ";
-	for (int i = 0; i < stud.getSessionsSize() - 1; i++) {
-		cout << std::left << stud.getSessionByIndex(1).numSesion << ", ";
+	if (stud.getSessionsSize() > 0) {
+
+		cout << std::left << "|" << setw(4) << "9" << "|" << "Обнаружены сессии под номерами : ";
+		for (int i = 0; i < stud.getSessionsSize() - 1; i++) {
+			cout << std::left << stud.getSessionByIndex(1).numSesion << ", ";
+		}
+		cout << std::left << setw(115 - 34 - stud.getSessionsSize() - (stud.getSessionsSize() - 1) * 2) << stud.getSessionByIndex(stud.getSessionsSize() - 1).numSesion << '|' << endl;
 	}
-	cout << std::left << setw (115-34 - stud.getSessionsSize() - (stud.getSessionsSize()-1)*2) << stud.getSessionByIndex(stud.getSessionsSize() - 1).numSesion << '|' << endl;
+	else {
+		cout << std::left << "|" << setw(4) << "9" << "|" << setw(113) << "Сессии не найдены" << '|' << endl;
+	}
 	cTools.PrintSeparator(ConsoleTools::Separators::Simple);
 	cout << "Для изменения поля или получения более подробной информации о нем введите его номер" << endl;
 }
@@ -147,82 +156,97 @@ void ConsoleInterfaceHandler::CreateStudentPage(Database db)
 	cout << "Создать студента" << endl << endl;
 	bool fl = false;
 	cout << "Введите ФИО" << endl;
-	cin >> setw(64) >> name;
-	name[63] = '\0';
+	cin.get(name, 64);
 	while (fgetc(stdin) != '\n');
-	for (int i = 0; i < strlen(name)-1; i++) {
+	name[63] = '\0';
+	for (int i = 0; i < strlen(name); i++) {
 		InitVector.push_back(name[i]);
 	}
 	InitVector.push_back(':');
 	cout << "Введите дату рождения через точку" << endl;
-	cin >> setw(16) >> dateOfBorn;
+	cin.get(dateOfBorn, 16);
 	dateOfBorn[15] = '\0';
 	while (fgetc(stdin) != '\n');
-	for (int i = 0; i < strlen(dateOfBorn)-1; i++) {
-		InitVector.push_back(dateOfBorn[i]);
+	regex reg (R"(^[0-9]{1,2}\.[0-9]{1,2}\.[0-9]{1,4}$)");
+	fl = false;
+	if (regex_match(dateOfBorn, reg)) {
+		fl =true;
 	}
-	InitVector.push_back(':');
-	cout << "Введите пол" << endl;
-	cin >> setw(32) >> gender;
-	gender[31] = '\0';
-	while (fgetc(stdin) != '\n');
-	for (int i = 0; i < strlen(gender) - 1; i++) {
-		InitVector.push_back(gender[i]);
+	while (!fl) {
+		cout << "Неверный формат даты" << endl;
+		cout << "Введите дату рождения через точку" << endl;
+		cin.get(dateOfBorn, 16);
+		dateOfBorn[15] = '\0';
+		while (fgetc(stdin) != '\n');
+		if (regex_match(dateOfBorn, reg)) {
+			fl = true;
+		}
+	}
+	for (int i = 0; i < strlen(dateOfBorn); i++) {
+		InitVector.push_back(dateOfBorn[i]);
 	}
 	InitVector.push_back(':');
 	cout << "Введите год поступления"<<endl;
 	fl = false;
-	cin >> setw(8) >> yearOfAdmission;
+	cin.get(yearOfAdmission, 8);
 	yearOfAdmission[7] = '\0';
 	while (fgetc(stdin) != '\n');
-	static const regex r(R"(^[0-9]{0,4}$)");
+	regex r(R"(^[0-9]{0,4}$)");
 	if (regex_match(yearOfAdmission, r)) { 
 		fl = true; 
 	}
 	while (!fl) {
 		cout << "Введите год поступления" << endl;
-		cin >> setw(8) >> yearOfAdmission;
+		cin.get(yearOfAdmission, 8);
 		yearOfAdmission[7] = '\0';
 		while (fgetc(stdin) != '\n');
-		static const regex r(R"(^[0-9]{0,4}$)");
+		regex r(R"(^[0-9]{0,4}$)");
 		if (regex_match(yearOfAdmission, r)) {
 			fl = true;
 		}
 	}
-	for (int i = 0; i < strlen(yearOfAdmission) - 1; i++) {
+	for (int i = 0; i < strlen(yearOfAdmission); i++) {
 		InitVector.push_back(yearOfAdmission[i]);
 	}
 	InitVector.push_back(':');
 	cout << "Введите факультет" << endl;
-	cin >> setw(64) >> faculty;
+	cin.get(faculty, 64);
 	faculty[63] = '\0';
 	while (fgetc(stdin) != '\n');
-	for (int i = 0; i < strlen(faculty) - 1; i++) {
+	for (int i = 0; i < strlen(faculty); i++) {
 		InitVector.push_back(faculty[i]);
 	}
 	InitVector.push_back(':');
 	cout << "Введите кафедру" << endl;
-	cin >> setw(64) >> departments;
+	cin.get(departments, 64);
 	departments[63] = '\0';
 	while (fgetc(stdin) != '\n');
-	for (int i = 0; i < strlen(departments) - 1; i++) {
+	for (int i = 0; i < strlen(departments); i++) {
 		InitVector.push_back(departments[i]);
 	}
 	InitVector.push_back(':');
 	cout << "Введите группу" << endl;
-	cin >> setw(16) >> group;
+	cin.get(group, 16);
 	group[15] = '\0';
 	while (fgetc(stdin) != '\n');
-	for (int i = 0; i < strlen(group) - 1; i++) {
+	for (int i = 0; i < strlen(group); i++) {
 		InitVector.push_back(group[i]);
 	}
 	InitVector.push_back(':');
 	cout << "Введите номер студенческого билета" << endl;
-	cin >> setw(16) >> numGradebook;
+	cin.get(numGradebook, 16);
 	numGradebook[15] = '\0';
 	while (fgetc(stdin) != '\n');
-	for (int i = 0; i < strlen(numGradebook) - 1; i++) {
+	for (int i = 0; i < strlen(numGradebook); i++) {
 		InitVector.push_back(numGradebook[i]);
+	}
+	InitVector.push_back(':');
+	cout << "Введите пол" << endl;
+	cin.get(gender, 32);
+	gender[31] = '\0';
+	while (fgetc(stdin) != '\n');
+	for (int i = 0; i < strlen(gender); i++) {
+		InitVector.push_back(gender[i]);
 	}
 	InitVector.push_back(';');
 	char* initChars = new char[InitVector.size()];
@@ -255,7 +279,7 @@ void ConsoleInterfaceHandler::FiltredStud(Database db)
 		fl = db.addFilter(filter, filtred);
 	}
 	cTools.PrintSeparator(ConsoleTools::Separators::Simple);
-	cout << '|' << std::left << setw(5) << "ID" << '|' << setw(70) << "ФИО" << '|' << "Дата рождения" << '|' << setw(27) << "Пол" << '|' << endl<<endl;
+	cout << '|' << std::left << setw(5) << "ID" << '|' << setw(70) << "ФИО" << '|' << "Дата рождения" << '|' << setw(27) << "Пол" << '|' << endl;
 	cTools.PrintSeparator(ConsoleTools::Separators::Students);
 	for (int i = 0; i < filtred.size(); i++) {
 		char* name = filtred[i].getName();
@@ -276,4 +300,19 @@ void ConsoleInterfaceHandler::FiltredStud(Database db)
 		while (fgetc(stdin) != '\n');
 	}
 	MainPage(db);
+}
+
+void ConsoleInterfaceHandler::SavePage(Database db)
+{
+	cTools.Clear();
+	if (db.saveDb()) {
+		cout << "База данных сохранена по адресу D:/students.txt";
+		Sleep(1000);
+		MainPage(db);
+	}
+	else {
+		cout << "Ошибка сохранения базы данных";
+		Sleep(1000);
+		MainPage(db);
+	}
 }

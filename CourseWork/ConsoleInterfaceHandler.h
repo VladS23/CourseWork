@@ -12,5 +12,6 @@ private:
 	void StudentPage(Student stud, Database db);
 	void CreateStudentPage(Database db);
 	void FiltredStud(Database db);
+	void SavePage(Database db);
 };
 
