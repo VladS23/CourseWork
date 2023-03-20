@@ -72,13 +72,13 @@ void ConsoleInterfaceHandler::MainPage(Database db)
 		delete[] dateOfBorn;
 	}
 	char options[7];
-	cin >> setw(7) >> options;
+	cin.get(options, 7);
 	while (fgetc(stdin) != '\n');
 	static const regex r(R"(^[0-9]{0,6}$)");
 	if (regex_match(options, r)) {
 		int ind = atoi(options)-1;
 		if (ind >= 0 && ind < db.students.size()) {
-			StudentPage(db.students[ind], db);
+			StudentPage(ind, db);
 		}
 		else if(ind==-1) {
 			CreateStudentPage(db);
@@ -104,17 +104,17 @@ void ConsoleInterfaceHandler::MainPage(Database db)
 	}
 }
 
-void ConsoleInterfaceHandler::StudentPage(Student stud,Database db)
+void ConsoleInterfaceHandler::StudentPage(int ind ,Database db)
 {
 	cTools.Clear();
-	int yearOfAdmission = stud.getYearOfAdmission();
-	char* name = stud.getName();
-	char* gender = stud.getGender();
-	char* dateOfBorn = stud.getDateOfBorn().toCharArray();
-	char* faculty=stud.getFaculty();
-	char* departments=stud.getDepartments();
-	char* group=stud.getGroup();
-	char* numGradebook=stud.getNumGradebook();
+	int yearOfAdmission = db.students[ind].getYearOfAdmission();
+	char* name = db.students[ind].getName();
+	char* gender = db.students[ind].getGender();
+	char* dateOfBorn = db.students[ind].getDateOfBorn().toCharArray();
+	char* faculty= db.students[ind].getFaculty();
+	char* departments= db.students[ind].getDepartments();
+	char* group= db.students[ind].getGroup();
+	char* numGradebook= db.students[ind].getNumGradebook();
 	cout << "Данные студента:" << endl<<endl;
 	cTools.PrintSeparator(ConsoleTools::Separators::Simple);
 	cout << '|' << std::left << setw(4)<<"1" << '|' << setw(65) << name << "|" << setw(4)<< "5" << '|' << setw(42) << faculty << '|' << endl;
@@ -125,19 +125,39 @@ void ConsoleInterfaceHandler::StudentPage(Student stud,Database db)
 	cTools.PrintSeparator(ConsoleTools::Separators::PersonalCard);
 	cout << '|' << std::left << setw(4) << "4" << '|' << setw(65) << yearOfAdmission << "|" << setw(4) << "8" << '|' << setw(42) << numGradebook << '|' << endl;
 	cTools.PrintSeparator(ConsoleTools::Separators::Simple);
-	if (stud.getSessionsSize() > 0) {
+	if (db.students[ind].getSessionsSize() > 0) {
 
 		cout << std::left << "|" << setw(4) << "9" << "|" << "Обнаружены сессии под номерами : ";
-		for (int i = 0; i < stud.getSessionsSize() - 1; i++) {
-			cout << std::left << stud.getSessionByIndex(1).numSesion << ", ";
+		for (int i = 0; i < db.students[ind].getSessionsSize() - 1; i++) {
+			cout << std::left << db.students[ind].getSessionByIndex(1).numSesion << ", ";
 		}
-		cout << std::left << setw(115 - 34 - stud.getSessionsSize() - (stud.getSessionsSize() - 1) * 2) << stud.getSessionByIndex(stud.getSessionsSize() - 1).numSesion << '|' << endl;
+		cout << std::left << setw(115 - 34 - db.students[ind].getSessionsSize() - (db.students[ind].getSessionsSize() - 1) * 2) << db.students[ind].getSessionByIndex(db.students[ind].getSessionsSize() - 1).numSesion << '|' << endl;
 	}
 	else {
 		cout << std::left << "|" << setw(4) << "9" << "|" << setw(113) << "Сессии не найдены" << '|' << endl;
 	}
+	delete[] name;
+	delete[] gender;
+	delete[] dateOfBorn;
+	delete[] faculty;
+	delete[] departments;
+	delete[] group;
+	delete[] numGradebook;
 	cTools.PrintSeparator(ConsoleTools::Separators::Simple);
-	cout << "Для изменения поля или получения более подробной информации о нем введите его номер" << endl;
+	cout << "Для изменения поля или получения более подробной информации о нем введите его номер, чтобы вернуться назад 0" << endl;
+	char options;
+	cin >> options;
+	while (fgetc(stdin) != '\n');
+	if (options == '0') {
+		MainPage(db);
+	}
+	else if (options=='9') {
+		//TODO
+	}
+	else {
+		UpdateStudPage((UpdatePage)atoi(&options), ind, db);
+	}
+	MainPage(db);
 }
 
 void ConsoleInterfaceHandler::CreateStudentPage(Database db)
@@ -249,7 +269,7 @@ void ConsoleInterfaceHandler::CreateStudentPage(Database db)
 		InitVector.push_back(gender[i]);
 	}
 	InitVector.push_back(';');
-	char* initChars = new char[InitVector.size()];
+	char* initChars = new char[InitVector.size()+10];
 	for (int i = 0; i < InitVector.size(); i++) {
 		initChars[i] = InitVector[i];
 	}
@@ -314,5 +334,124 @@ void ConsoleInterfaceHandler::SavePage(Database db)
 		cout << "Ошибка сохранения базы данных";
 		Sleep(1000);
 		MainPage(db);
+	}
+}
+
+void ConsoleInterfaceHandler::UpdateStudPage(UpdatePage options, int ind, Database db)
+{
+	char* name;
+	Date dateOfBornd;
+	char* dateOfBornc;
+	char yearOfAdmission[8]="0";
+	bool fl = false;
+	regex reg(R"(^[0-9]{1,2}\.[0-9]{1,2}\.[0-9]{1,4}$)");
+	regex r(R"(^[0-9]{0,4}$)");
+	int date[3];
+	int curDateEl = 0;
+	int i = 0;
+	int j = 0;
+	cTools.Clear();
+	switch (options)
+	{
+	case ConsoleInterfaceHandler::Name:
+		name = db.students[ind].getName();
+		cTools.PrintSeparator(ConsoleTools::Simple);
+		cout << '|' << setw(118) << name << '|';
+		cTools.PrintSeparator(ConsoleTools::Simple);
+		cout << endl << endl<<"Введите новое имя, для выхода введите 0"<<endl;
+		cin.get(name, 64);
+		while (fgetc(stdin) != '\n');
+		if (name[0] != '0') {
+			name[63] = '\0';
+			bool b = db.students[ind].setName(name);
+			auto x=0;
+		}
+		delete[] name;
+		MainPage(db);
+		break;
+	case ConsoleInterfaceHandler::DateOfBorn:
+		dateOfBornd = db.students[ind].getDateOfBorn();
+		cTools.PrintSeparator(ConsoleTools::Simple);
+		dateOfBornc = dateOfBornd.toCharArray();
+		cout << '|' << setw(118) << dateOfBornc << '|';
+		cTools.PrintSeparator(ConsoleTools::Simple);
+		cout << "Введите дату рождения через точку" << endl;
+		cin.get(dateOfBornc, 16);
+		dateOfBornc[15] = '\0';
+		while (fgetc(stdin) != '\n');
+		if (regex_match(dateOfBornc, reg)) {
+			fl = true;
+		}
+		while (!fl) {
+			cout << "Неверный формат даты" << endl;
+			cout << "Введите дату рождения через точку" << endl;
+			cin.get(dateOfBornc, 16);
+			dateOfBornc[15] = '\0';
+			while (fgetc(stdin) != '\n');
+			if (regex_match(dateOfBornc, reg)) {
+				fl = true;
+			}
+		}
+		i = 0;
+		while (dateOfBornc[i] != '\0')
+		{
+			char curInt[8]={'0'};
+			j = 0;
+			while (dateOfBornc[i] != '.' && dateOfBornc[i] != '\0') {
+				curInt[j] = dateOfBornc[i];
+				i++;
+				j++;
+			}
+			i++;
+			date[curDateEl] = atoi(curInt);
+			curDateEl++;
+			if (dateOfBornc[i - 1] == '\0') {
+				break;
+			}
+		}
+		dateOfBornd.day = date[0];
+		dateOfBornd.month = date[1];
+		dateOfBornd.year = date[2];
+		db.students[ind].setDateOfBorn(dateOfBornd);
+		delete[] dateOfBornc;
+		MainPage(db);
+		break;
+	case ConsoleInterfaceHandler::Gender:
+
+		break;
+	case ConsoleInterfaceHandler::YearOfAdmissions:
+		cTools.PrintSeparator(ConsoleTools::Simple);
+		cout << '|' << setw(118) << db.students[i].getYearOfAdmission() << '|';
+		cTools.PrintSeparator(ConsoleTools::Simple);
+		cout << "Введите год поступления" << endl;
+		fl = false;
+		cin.get(yearOfAdmission, 8);
+		yearOfAdmission[7] = '\0';
+		while (fgetc(stdin) != '\n');
+		if (regex_match(yearOfAdmission, r)) {
+			fl = true;
+		}
+		while (!fl) {
+			cout << "Введите год поступления" << endl;
+			cin.get(yearOfAdmission, 8);
+			yearOfAdmission[7] = '\0';
+			while (fgetc(stdin) != '\n');
+			if (regex_match(yearOfAdmission, r)) {
+				fl = true;
+			}
+		}
+		db.students[i].setYearOfAdmission(atoi(yearOfAdmission));
+		MainPage(db);
+		break;
+	case ConsoleInterfaceHandler::Faculty:
+		break;
+	case ConsoleInterfaceHandler::Departsment:
+		break;
+	case ConsoleInterfaceHandler::Group:
+		break;
+	case ConsoleInterfaceHandler::numOfGradebook:
+		break;
+	default:
+		break;
 	}
 }
