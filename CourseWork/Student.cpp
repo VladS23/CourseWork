@@ -408,6 +408,10 @@ bool Student::updSesResultByIndex(Result res, int sesNum, int resInd)
 			break;
 		}
 	}
+	if (sessions.size() == 1) {
+		sessions[0].oneRes[resInd] = res;
+		return true;
+	}
 	if (sesInd != -1) {
 		if (resInd < sessions[sesInd].oneRes.size()) {
 			sessions[sesInd].oneRes[resInd] = res;
@@ -426,6 +430,10 @@ bool Student::addSesResult(Result res, int sesNum)
 			break;
 		}
 	}
+	if (sessions.size() == 1) {
+		sessions[0].oneRes.push_back(res);
+		return true;
+	}
 	if (sesInd != -1) {
 		sessions[sesInd].oneRes.push_back(res);
 		return true;
@@ -441,6 +449,10 @@ bool Student::deleteSesResultByIndex(int sesNum, int resInd)
 			sesInd = i;
 			break;
 		}
+	}
+	if (sessions.size() == 1) {
+		sessions[0].oneRes.erase(sessions[0].oneRes.begin() + resInd);
+		return true;
 	}
 	if (sesInd != -1) {
 		if (resInd < sessions[sesInd].oneRes.size()) {

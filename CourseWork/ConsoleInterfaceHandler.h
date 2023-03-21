@@ -18,5 +18,8 @@ private:
 	void SessionsPage(Database db, int ind);
 	void AddSessionPage(Database db, int ind);
 	void SessionPage(Database db, int ind, int sesInd);
+	void DeleteSessionPage(Database db, int ind);
+	void AddSesRes(Database db, int ind, int sesInd);
+	void UpdateOrDeleteRes(Database db, int ind, int sesInd, int resInd);
 };
 

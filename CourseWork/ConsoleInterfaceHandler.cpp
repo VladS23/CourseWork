@@ -521,7 +521,7 @@ void ConsoleInterfaceHandler::SessionsPage(Database db, int ind)
 	cTools.Clear();
 	int options;
 	char prevoptions[8];
-	cout << "Введите индекс сессии, чтобы просмотреть или изменить ее информацию, 0 чтобы добавить новую" << endl;
+	cout << "Введите индекс сессии, чтобы просмотреть или изменить ее информацию," << endl << "0 чтобы добавить новую, - чтобы удалить одну из существующих, q чтобы выйти" << endl;
 	cout << "Сессии" << endl;
 	cTools.PrintSeparator(cTools.Simple);
 	for (int i = 0; i < db.students[ind].getSessionsSize(); i++) {
@@ -536,6 +536,9 @@ void ConsoleInterfaceHandler::SessionsPage(Database db, int ind)
 	if (regex_match(prevoptions, r)) {
 		fl = true;
 	}
+	else if ((prevoptions[0] == '-' and prevoptions[1] == '\0') || (prevoptions[0] == 'q' and prevoptions[1] == '\0')) {
+		fl = true;
+	}
 	while (not fl) {
 		cout << "Неверный формат номера" << endl;
 		cin.get(prevoptions, 8);
@@ -546,13 +549,25 @@ void ConsoleInterfaceHandler::SessionsPage(Database db, int ind)
 		if (regex_match(prevoptions, r)) {
 			fl = true;
 		}
+		else if ((prevoptions[0] == '-' and prevoptions[1] == '\0') || (prevoptions[0] == 'q' and prevoptions[1] == '\0')) {
+			fl = true;
+		}
 	}
-	options = atoi(prevoptions);
-	if (options == 0) {
-		AddSessionPage(db, ind);
+	if (!((prevoptions[0] == '-' and prevoptions[1] == '\0') || (prevoptions[0] == 'q' and prevoptions[1] == '\0')))
+	{
+		options = atoi(prevoptions);
+		if (options == 0) {
+			AddSessionPage(db, ind);
+		}
+		else {
+			SessionPage(db, ind, options-1);
+		}
+	}
+	else if ((prevoptions[0] == '-' and prevoptions[1] == '\0')) {
+		DeleteSessionPage(db, ind);
 	}
 	else {
-		SessionPage(db, ind, options);
+		StudentPage(ind, db);
 	}
 }
 
@@ -596,5 +611,150 @@ void ConsoleInterfaceHandler::AddSessionPage(Database db, int ind)
 
 void ConsoleInterfaceHandler::SessionPage(Database db, int ind, int sesInd)
 {
+	cTools.Clear();
+	if (sesInd < db.students[ind].getSessionsSize()) {
+		cout << "Чтобы изменить или удалить результат введите его номер, чтобы добавить новый результат введите 0, чтобы выйти q" << endl;
+		cout << "Результаты экзаменов:" << endl;
+		cTools.PrintSeparator(cTools.Simple);
+		cout << '|' << setw(3) << "№" << '|' << setw(75) << "Название предмета" << "|" << setw(38) << "Оценка" << "|" << endl;
+		cTools.PrintSeparator(cTools.Simple);
+		for (int i = 0; i < db.students[ind].getSessionByIndex(sesInd).oneRes.size(); i++) {
+			cout << '|' << setw(3) << i + 1 << '|' << setw(75) << db.students[ind].getSessionByIndex(sesInd).oneRes[i].subName << "|" << setw(38) << db.students[ind].getSessionByIndex(sesInd).oneRes[i].grading << "|" << endl;
+			cTools.PrintSeparator(cTools.Simple);
+		}
+		char prevoptions[8];
+		int options;
+		cin.get(prevoptions, 8);
+		prevoptions[7] = '\0';
+		while (fgetc(stdin) != '\n');
+		regex r(R"(^[0-9]{0,2}$)");
+		bool fl = false;
+		if (regex_match(prevoptions, r)) {
+			fl = true;
+		}
+		else if (prevoptions[0] == 'q' and prevoptions[1] == '\0') {
+			fl = true;
+		}
+		while (not fl) {
+			cout << "Неверный формат номера" << endl;
+			cin.get(prevoptions, 8);
+			prevoptions[7] = '\0';
+			while (fgetc(stdin) != '\n');
+			regex r(R"(^[0-9]{0,2}$)");
+			bool fl = false;
+			if (regex_match(prevoptions, r)) {
+				fl = true;
+			}
+			else if (prevoptions[0] == 'q' and prevoptions[1] == '\0') {
+				fl = true;
+			}
+		}
+		if (!(prevoptions[0] == 'q' and prevoptions[1] == '\0'))
+		{
+			options = atoi(prevoptions);
+			if (options == 0) {
+				AddSesRes(db, ind, sesInd);
+			}
+			else {
+				UpdateOrDeleteRes(db, ind, sesInd, options - 1);
+			}
+		}
+		else {
+			SessionsPage(db, ind);
+		}
+	}
+	else {
+		cout << "Ошибка, отсутсвует сессия с данным номером" << endl;
+		Sleep(500);
+	}
+	SessionsPage(db, ind);
 }
+
+void ConsoleInterfaceHandler::DeleteSessionPage(Database db, int ind)
+{
+	cTools.Clear();
+	cout << "Введите номер сессии для удаления" << endl;
+	char prevoptions[8];
+	int options;
+	cin.get(prevoptions, 8);
+	prevoptions[7] = '\0';
+	while (fgetc(stdin) != '\n');
+	regex r(R"(^[0-9]{0,2}$)");
+	bool fl = false;
+	if (regex_match(prevoptions, r)) {
+		fl = true;
+	}
+	while (not fl) {
+		cout << "Неверный формат номера" << endl;
+		cin.get(prevoptions, 8);
+		prevoptions[7] = '\0';
+		while (fgetc(stdin) != '\n');
+		regex r(R"(^[0-9]{0,2}$)");
+		bool fl = false;
+		if (regex_match(prevoptions, r)) {
+			fl = true;
+		}
+	}
+	options = atoi(prevoptions);
+	bool success = db.students[ind].deleteSessionByNum(options);
+	cTools.Clear();
+	if (success) {
+		cout << "Сессия успешено удалена" << endl;
+	}
+	else {
+		cout << "Сессия не существует" << endl;
+	}
+	Sleep(1000);
+	SessionsPage(db, ind);
+}
+
+void ConsoleInterfaceHandler::AddSesRes(Database db, int ind, int sesInd)
+{
+	cTools.Clear();
+	char subName [64];
+	int grad;
+	cout << "Введите название предмета"<<endl;
+	cin.get(subName, 64);
+	subName[63] = '\0';
+	while (fgetc(stdin) != '\n');
+	cout << "Введите оценку"<<endl;
+	cin >> grad;
+	while (fgetc(stdin) != '\n');
+	Result res;
+	for (int i = 0; i < 64; i++) {
+		res.subName[i] = subName[i];
+	}
+	res.grading = grad;
+	db.students[ind].addSesResult(res, db.students[ind].getSessionByIndex(sesInd).numSesion);
+	cTools.Clear();
+	cout << "Результат успешно добавлен" << endl;
+	Sleep(500);
+	SessionPage(db, ind, sesInd);
+}
+
+void ConsoleInterfaceHandler::UpdateOrDeleteRes(Database db, int ind, int sesInd, int resInd)
+{
+	cTools.Clear();
+	if (resInd < db.students[ind].getSessionByIndex(sesInd).oneRes.size()) {
+		cout << "Введите новую оценку для предмета " << db.students[ind].getSessionByIndex(sesInd).oneRes[resInd].subName << ". Текущая оценка: " << db.students[ind].getSessionByIndex(sesInd).oneRes[resInd].grading << endl;
+		cout << "Для удаления оценки введите -1"<<endl;
+		int options;
+		cin >> options;
+		while (fgetc(stdin) != '\n');
+		if (options == -1) {
+			db.students[ind].deleteSesResultByIndex(db.students[ind].getSessionByIndex(sesInd).numSesion, resInd);
+		}
+		else {
+			Result res = db.students[ind].getSessionByIndex(sesInd).oneRes[resInd];
+			res.grading = options;
+			db.students[ind].updSesResultByIndex(res, db.students[ind].getSessionByIndex(sesInd).numSesion, resInd);
+		}
+	}
+	else {
+		cout << "Ошибка, отсутсвует результат с данным номером" << endl;
+		Sleep(500);
+	}
+	SessionPage(db, ind, sesInd);
+}
+
 
