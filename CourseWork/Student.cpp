@@ -367,26 +367,35 @@ bool Student::addSessionByNum(int num)
 			break;
 		}
 	}
-	if (ind == -1) {
-		for (int i = 0; i < sessions.size()-1; i++) {
-			if (sessions[i].numSesion<num && sessions[i + 1].numSesion>num) {
-				ind = i + 1;
-				break;
-			}
-		}
+	if (!sessions.size() == 0) {
 		if (ind == -1) {
-			if (sessions[0].numSesion > num) {
-				ind = 0;
+			for (int i = 0; i < sessions.size() - 1; i++) {
+				if (sessions[i].numSesion<num && sessions[i + 1].numSesion>num) {
+					ind = i + 1;
+					break;
+				}
 			}
-			if (sessions[sessions.size() - 1].numSesion < num) {
-				ind = sessions.size();
+			if (ind == -1) {
+				if (sessions[0].numSesion > num) {
+					ind = 0;
+				}
+				if (sessions[sessions.size() - 1].numSesion < num) {
+					ind = sessions.size();
+				}
 			}
+			Session newSes;
+			newSes.numSesion = num;
+			sessions.insert(sessions.begin() + ind, newSes);
+			return true;
 		}
+	}
+	else {
 		Session newSes;
 		newSes.numSesion = num;
-		sessions.insert(sessions.begin() + ind, newSes);
+		sessions.push_back(newSes);
 		return true;
 	}
+
 	return false;
 }
 

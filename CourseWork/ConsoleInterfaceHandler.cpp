@@ -525,7 +525,7 @@ void ConsoleInterfaceHandler::SessionsPage(Database db, int ind)
 	cout << "Сессии" << endl;
 	cTools.PrintSeparator(cTools.Simple);
 	for (int i = 0; i < db.students[ind].getSessionsSize(); i++) {
-		cout << '|' << setw(3) << i << "Сессия № " << setw(107) << db.students[ind].getSessionByIndex(i).numSesion << "|" << endl;
+		cout << '|' << setw(3) << i+1 << "Сессия № " << setw(106) << db.students[ind].getSessionByIndex(i).numSesion << "|" << endl;
 		cTools.PrintSeparator(cTools.Simple);
 	}
 	cin.get(prevoptions, 8);
@@ -558,6 +558,40 @@ void ConsoleInterfaceHandler::SessionsPage(Database db, int ind)
 
 void ConsoleInterfaceHandler::AddSessionPage(Database db, int ind)
 {
+	cTools.Clear();
+	cout << "Введите номер сессии для добавления" << endl;
+	char prevoptions [8];
+	int options;
+	cin.get(prevoptions, 8);
+	prevoptions[7] = '\0';
+	while (fgetc(stdin) != '\n');
+	regex r(R"(^[0-9]{0,2}$)");
+	bool fl = false;
+	if (regex_match(prevoptions, r)) {
+		fl = true;
+	}
+	while (not fl) {
+		cout << "Неверный формат номера" << endl;
+		cin.get(prevoptions, 8);
+		prevoptions[7] = '\0';
+		while (fgetc(stdin) != '\n');
+		regex r(R"(^[0-9]{0,2}$)");
+		bool fl = false;
+		if (regex_match(prevoptions, r)) {
+			fl = true;
+		}
+	}
+	options = atoi(prevoptions);
+	bool success = db.students[ind].addSessionByNum(options);
+	cTools.Clear();
+	if (success) {
+		cout << "Сессия успешено создана" << endl;
+	}
+	else {
+		cout << "Сессия уже существует" << endl;
+	}
+	Sleep(1000);
+	SessionsPage(db, ind);
 }
 
 void ConsoleInterfaceHandler::SessionPage(Database db, int ind, int sesInd)
