@@ -25,9 +25,9 @@ public:
 	bool setNumGradebook(char newVal[16]);
 	bool deleteSessionByNum(int num);
 	bool addSessionByNum(int num);
-	bool updSesResultByIndex(Result res, int sesNum, int resInd); //TODO
+	bool updSesResultByIndex(Result res, int sesNum, int resInd);
 	bool addSesResult(Result res, int sesNum);
-	bool deleteSesResultByIndex(int sesNum, int resInd); //TODO
+	bool deleteSesResultByIndex(int sesNum, int resInd);
 	int getSessionsSize();
 	static int tests();
 };
