@@ -461,9 +461,9 @@ void ConsoleInterfaceHandler::UpdateStudPage(UpdatePage options, int ind, Databa
 	case ConsoleInterfaceHandler::Faculty:
 		faculty = db.students[ind].getFaculty();
 		cTools.PrintSeparator(ConsoleTools::Simple);
-		cout << '|' << setw(118) << faculty << '|';
+		cout << '|' << setw(118) << faculty << '|' << endl;
 		cTools.PrintSeparator(ConsoleTools::Simple);
-		cout << endl << endl << "¬ведите факультет" << endl;
+		cout << "¬ведите факультет" << endl;
 		cin.get(faculty, 64);
 		faculty[63] = '\0';
 		while (fgetc(stdin) != '\n');
@@ -474,9 +474,9 @@ void ConsoleInterfaceHandler::UpdateStudPage(UpdatePage options, int ind, Databa
 	case ConsoleInterfaceHandler::Departsment:
 		departments = db.students[ind].getDepartments();
 		cTools.PrintSeparator(ConsoleTools::Simple);
-		cout << '|' << setw(118) << departments << '|';
+		cout << '|' << setw(118) << departments << '|' << endl;
 		cTools.PrintSeparator(ConsoleTools::Simple);
-		cout << endl << endl << "¬ведите кафедру" << endl;
+		cout << "¬ведите кафедру" << endl;
 		cin.get(departments, 64);
 		departments[63] = '\0';
 		while (fgetc(stdin) != '\n');
@@ -487,9 +487,9 @@ void ConsoleInterfaceHandler::UpdateStudPage(UpdatePage options, int ind, Databa
 	case ConsoleInterfaceHandler::Group:
 		group = db.students[ind].getGroup();
 		cTools.PrintSeparator(ConsoleTools::Simple);
-		cout << '|' << setw(118) << group << '|';
+		cout << '|' << setw(118) << group << '|' << endl;
 		cTools.PrintSeparator(ConsoleTools::Simple);
-		cout << endl << endl << "¬ведите группу" << endl;
+		cout << "¬ведите группу" << endl;
 		cin.get(group, 16);
 		group[15] = '\0';
 		while (fgetc(stdin) != '\n');
@@ -500,9 +500,9 @@ void ConsoleInterfaceHandler::UpdateStudPage(UpdatePage options, int ind, Databa
 	case ConsoleInterfaceHandler::numOfGradebook:
 		numGrade = db.students[ind].getNumGradebook();
 		cTools.PrintSeparator(ConsoleTools::Simple);
-		cout << '|' << setw(118) << numGrade << '|';
+		cout << '|' << setw(118) << numGrade << '|'<<endl;
 		cTools.PrintSeparator(ConsoleTools::Simple);
-		cout << endl << endl << "¬ведите номер зачетки" << endl;
+		cout << "¬ведите номер зачетки" << endl;
 		cin.get(numGrade, 16);
 		numGrade[15] = '\0';
 		while (fgetc(stdin) != '\n');

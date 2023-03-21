@@ -316,11 +316,11 @@ bool Student::setDepartments(char newVal [64])
 	return false;
 }
 
-bool Student::setGroup(char newVal [64])
+bool Student::setGroup(char newVal [16])
 {
-	if (checkCharArray(newVal, 64))
+	if (checkCharArray(newVal, 16))
 	{
-		for (int i = 0; i < 64; i++) {
+		for (int i = 0; i < 16; i++) {
 			group[i] = newVal[i];
 		}
 		return true;
