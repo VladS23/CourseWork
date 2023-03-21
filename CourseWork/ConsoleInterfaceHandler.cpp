@@ -152,7 +152,7 @@ void ConsoleInterfaceHandler::StudentPage(int ind ,Database db)
 		MainPage(db);
 	}
 	else if (options=='9') {
-		//TODO
+		SessionsPage(db, ind);
 	}
 	else {
 		UpdateStudPage((UpdatePage)atoi(&options), ind, db);
@@ -515,3 +515,52 @@ void ConsoleInterfaceHandler::UpdateStudPage(UpdatePage options, int ind, Databa
 		break;
 	}
 }
+
+void ConsoleInterfaceHandler::SessionsPage(Database db, int ind)
+{
+	cTools.Clear();
+	int options;
+	char prevoptions[8];
+	cout << "Введите индекс сессии, чтобы просмотреть или изменить ее информацию, 0 чтобы добавить новую" << endl;
+	cout << "Сессии" << endl;
+	cTools.PrintSeparator(cTools.Simple);
+	for (int i = 0; i < db.students[ind].getSessionsSize(); i++) {
+		cout << '|' << setw(3) << i << "Сессия № " << setw(107) << db.students[ind].getSessionByIndex(i).numSesion << "|" << endl;
+		cTools.PrintSeparator(cTools.Simple);
+	}
+	cin.get(prevoptions, 8);
+	prevoptions[7] = '\0';
+	while (fgetc(stdin) != '\n');
+	regex r(R"(^[0-9]{0,2}$)");
+	bool fl = false;
+	if (regex_match(prevoptions, r)) {
+		fl = true;
+	}
+	while (not fl) {
+		cout << "Неверный формат номера" << endl;
+		cin.get(prevoptions, 8);
+		prevoptions[7] = '\0';
+		while (fgetc(stdin) != '\n');
+		regex r(R"(^[0-9]{0,2}$)");
+		bool fl = false;
+		if (regex_match(prevoptions, r)) {
+			fl = true;
+		}
+	}
+	options = atoi(prevoptions);
+	if (options == 0) {
+		AddSessionPage(db, ind);
+	}
+	else {
+		SessionPage(db, ind, options);
+	}
+}
+
+void ConsoleInterfaceHandler::AddSessionPage(Database db, int ind)
+{
+}
+
+void ConsoleInterfaceHandler::SessionPage(Database db, int ind, int sesInd)
+{
+}
+

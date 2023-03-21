@@ -15,5 +15,8 @@ private:
 	void FiltredStud(Database db);
 	void SavePage(Database db);
 	void UpdateStudPage(UpdatePage options, int ind, Database db);
+	void SessionsPage(Database db, int ind);
+	void AddSessionPage(Database db, int ind);
+	void SessionPage(Database db, int ind, int sesInd);
 };
 
