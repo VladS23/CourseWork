@@ -342,6 +342,11 @@ void ConsoleInterfaceHandler::UpdateStudPage(UpdatePage options, int ind, Databa
 	char* name;
 	Date dateOfBornd;
 	char* dateOfBornc;
+	char* faculty;
+	char* departments;
+	char* group;
+	char* numGrade;
+	char* gender;
 	char yearOfAdmission[8]="0";
 	bool fl = false;
 	regex reg(R"(^[0-9]{1,2}\.[0-9]{1,2}\.[0-9]{1,4}$)");
@@ -356,15 +361,14 @@ void ConsoleInterfaceHandler::UpdateStudPage(UpdatePage options, int ind, Databa
 	case ConsoleInterfaceHandler::Name:
 		name = db.students[ind].getName();
 		cTools.PrintSeparator(ConsoleTools::Simple);
-		cout << '|' << setw(118) << name << '|';
+		cout << '|' << setw(118) << name << '|'<<endl;
 		cTools.PrintSeparator(ConsoleTools::Simple);
-		cout << endl << endl<<"¬ведите новое им€, дл€ выхода введите 0"<<endl;
+		cout <<"¬ведите новое им€, дл€ выхода введите 0"<<endl;
 		cin.get(name, 64);
 		while (fgetc(stdin) != '\n');
 		if (name[0] != '0') {
 			name[63] = '\0';
 			bool b = db.students[ind].setName(name);
-			auto x=0;
 		}
 		delete[] name;
 		MainPage(db);
@@ -417,7 +421,17 @@ void ConsoleInterfaceHandler::UpdateStudPage(UpdatePage options, int ind, Databa
 		MainPage(db);
 		break;
 	case ConsoleInterfaceHandler::Gender:
-
+		gender = db.students[ind].getGender();
+		cTools.PrintSeparator(ConsoleTools::Simple);
+		cout << '|' << setw(118) << gender << '|'<<endl;
+		cTools.PrintSeparator(ConsoleTools::Simple);
+		cout << "¬ведите пол" << endl;
+		cin.get(gender, 32);
+		gender[31] = '\0';
+		while (fgetc(stdin) != '\n');
+		db.students[ind].setGender(gender);
+		delete[] gender;
+		MainPage(db);
 		break;
 	case ConsoleInterfaceHandler::YearOfAdmissions:
 		cTools.PrintSeparator(ConsoleTools::Simple);
@@ -439,19 +453,65 @@ void ConsoleInterfaceHandler::UpdateStudPage(UpdatePage options, int ind, Databa
 			if (regex_match(yearOfAdmission, r)) {
 				fl = true;
 			}
+			delete[] yearOfAdmission;
 		}
 		db.students[i].setYearOfAdmission(atoi(yearOfAdmission));
 		MainPage(db);
 		break;
 	case ConsoleInterfaceHandler::Faculty:
+		faculty = db.students[ind].getFaculty();
+		cTools.PrintSeparator(ConsoleTools::Simple);
+		cout << '|' << setw(118) << faculty << '|';
+		cTools.PrintSeparator(ConsoleTools::Simple);
+		cout << endl << endl << "¬ведите факультет" << endl;
+		cin.get(faculty, 64);
+		faculty[63] = '\0';
+		while (fgetc(stdin) != '\n');
+		db.students[ind].setFaculty(faculty);
+		delete[] faculty;
+		MainPage(db);
 		break;
 	case ConsoleInterfaceHandler::Departsment:
+		departments = db.students[ind].getDepartments();
+		cTools.PrintSeparator(ConsoleTools::Simple);
+		cout << '|' << setw(118) << departments << '|';
+		cTools.PrintSeparator(ConsoleTools::Simple);
+		cout << endl << endl << "¬ведите кафедру" << endl;
+		cin.get(departments, 64);
+		departments[63] = '\0';
+		while (fgetc(stdin) != '\n');
+		db.students[ind].setDepartments(departments);
+		delete[] departments;
+		MainPage(db);
 		break;
 	case ConsoleInterfaceHandler::Group:
+		group = db.students[ind].getGroup();
+		cTools.PrintSeparator(ConsoleTools::Simple);
+		cout << '|' << setw(118) << group << '|';
+		cTools.PrintSeparator(ConsoleTools::Simple);
+		cout << endl << endl << "¬ведите группу" << endl;
+		cin.get(group, 16);
+		group[15] = '\0';
+		while (fgetc(stdin) != '\n');
+		db.students[ind].setGroup(group);
+		delete[] group;
+		MainPage(db);
 		break;
 	case ConsoleInterfaceHandler::numOfGradebook:
+		numGrade = db.students[ind].getNumGradebook();
+		cTools.PrintSeparator(ConsoleTools::Simple);
+		cout << '|' << setw(118) << numGrade << '|';
+		cTools.PrintSeparator(ConsoleTools::Simple);
+		cout << endl << endl << "¬ведите номер зачетки" << endl;
+		cin.get(numGrade, 16);
+		numGrade[15] = '\0';
+		while (fgetc(stdin) != '\n');
+		db.students[ind].setNumGradebook(numGrade);
+		delete[] numGrade;
+		MainPage(db);
 		break;
 	default:
+		MainPage(db);
 		break;
 	}
 }

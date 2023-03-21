@@ -57,9 +57,9 @@ bool Person::setDateOfBorn(Date date)
 
 bool Person::setGender(char newVal [32])
 {
-	if (checkCharArray(newVal, 64))
+	if (checkCharArray(newVal, 32))
 	{
-		for (int i = 0; i < 64; i++) {
+		for (int i = 0; i < 32; i++) {
 			gender[i] = newVal[i];
 		}
 		return true;
