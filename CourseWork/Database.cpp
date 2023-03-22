@@ -12,23 +12,17 @@ using namespace std;
 int Database::countSes5(Student student, std::set<int> setSesNumbers)
 {
 	int fives = 0;
-	int j = 0;
 	vector <int> vecSesNum(setSesNumbers.begin(), setSesNumbers.end());
-	for (int i = 0; i < vecSesNum.size(); i++) {
-		if (j < student.getSessionsSize() &&  vecSesNum[i] < student.getSessionByIndex(j).numSesion) {
-		}
-		else if (j < student.getSessionsSize() &&  vecSesNum[i] > student.getSessionByIndex(j).numSesion) {
-			j++;
-			i--;
-		}
-		else if (j < student.getSessionsSize() &&  vecSesNum[i] == student.getSessionByIndex(j).numSesion) {
-			for (int k = 0; k < student.getSessionByIndex(j).oneRes.size(); k++) {
-				if (student.getSessionByIndex(j).oneRes[k].grading == 5) {
-					fives++;
+	for (int i = 0; i < student.getSessionsSize(); i++) {
+		for (int j = 0; j < vecSesNum.size(); j++) {
+			if (student.getSessionByIndex(i).numSesion == vecSesNum[j]) {
+				for (int k=0; k < student.getSessionByIndex(i).oneRes.size(); k++) {
+					if (student.getSessionByIndex(i).oneRes[k].grading == 5) {
+						fives++;
+					}
 				}
 			}
-			j++;
-		}
+		 }
 	}
 	return fives;
 }
@@ -62,7 +56,6 @@ bool Database::loadDb(char* dbPath)
 	crypt.Decrypt(plaintext, initString.size());
 	int count=0;
 	vector<char> initVector;
-	//std::cout << plaintext;
 	for (int i = 0; i < strlen(plaintext); i++) {
 		if (plaintext[i] == ';') {
 			count++;

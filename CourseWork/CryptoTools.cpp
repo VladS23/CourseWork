@@ -4,7 +4,6 @@
 #include <strsafe.h>
 void ErrorExit(LPTSTR lpszFunction)
 {
-    // Retrieve the system error message for the last-error code
 
 
 }
@@ -34,7 +33,6 @@ CryptoTools::~CryptoTools()
         }
     }
 
-    // Destroy the session key.
     if (hKey)
     {
         if (!(CryptDestroyKey(hKey))) {
@@ -43,7 +41,6 @@ CryptoTools::~CryptoTools()
         }
     }
 
-    // Release the provider handle.
     if (hCryptProv)
     {
         if (!(CryptReleaseContext(hCryptProv, 0))) {
@@ -53,18 +50,14 @@ CryptoTools::~CryptoTools()
     }
 }
 CryptoTools::CryptoTools() {
-    // Declare and initialize variables.
-    //----------------------------------------------------------------
-    // Get the password from the user.
+
 
     fprintf(stderr, "Введите пароль для генерации ключа: ");
 
-    // Get a password while printing only asterisks to the screen.
+
     GetConsoleInput(szPassword, PASSWORD_LENGTH);
     dwLength = (DWORD)strlen(szPassword);
 
-    //----------------------------------------------------------------
-    // Acquire a cryptographic provider context handle.
 
     if (CryptAcquireContext(
         &hCryptProv,
@@ -80,8 +73,7 @@ CryptoTools::CryptoTools() {
         char er[34] = "Ошибка получения контекста";
         MyHandleError(er);
     }
-    //----------------------------------------------------------------
-    // Create an empty hash object.
+
 
     if (CryptCreateHash(
         hCryptProv,
@@ -97,8 +89,6 @@ CryptoTools::CryptoTools() {
         char er[33] = "Ошибка при создании пустого хеша";
         MyHandleError(er);
     }
-    //----------------------------------------------------------------
-    // Hash the password string.
 
     if (CryptHashData(
         hHash,
@@ -113,8 +103,7 @@ CryptoTools::CryptoTools() {
         char er[32] = "Ошибка создания пароля";
         MyHandleError(er);
     }
-    //----------------------------------------------------------------
-    // Create a session key based on the hash of the password.
+   
 
     if (CryptDeriveKey(
         hCryptProv,
@@ -153,7 +142,6 @@ void CryptoTools::Crypt(char* chars, int charsLen)
             (LPTSTR)&lpMsgBuf,
             0, NULL);
 
-        // Display the error message and exit the process
 
         lpDisplayBuf = (LPVOID)LocalAlloc(LMEM_ZEROINIT,
             (lstrlen((LPCTSTR)lpMsgBuf) + lstrlen((LPCTSTR)lpszFunction) + 40) * sizeof(TCHAR));
@@ -167,7 +155,6 @@ void CryptoTools::Crypt(char* chars, int charsLen)
         LocalFree(lpDisplayBuf);
         ExitProcess(dw);
     }
-    //std::cout << chars<<endl;
 }
 void CryptoTools::Decrypt(char* chars, int charsLen)
 {
@@ -188,8 +175,6 @@ void CryptoTools::Decrypt(char* chars, int charsLen)
             MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
             (LPTSTR)&lpMsgBuf,
             0, NULL);
-
-        // Display the error message and exit the process
 
         lpDisplayBuf = (LPVOID)LocalAlloc(LMEM_ZEROINIT,
             (lstrlen((LPCTSTR)lpMsgBuf) + lstrlen((LPCTSTR)lpszFunction) + 40) * sizeof(TCHAR));

@@ -127,11 +127,7 @@ void ConsoleInterfaceHandler::StudentPage(int ind ,Database db)
 	cTools.PrintSeparator(ConsoleTools::Separators::Simple);
 	if (db.students[ind].getSessionsSize() > 0) {
 
-		cout << std::left << "|" << setw(4) << "9" << "|" << "Обнаружены сессии под номерами : ";
-		for (int i = 0; i < db.students[ind].getSessionsSize() - 1; i++) {
-			cout << std::left << db.students[ind].getSessionByIndex(1).numSesion << ", ";
-		}
-		cout << std::left << setw(115 - 34 - db.students[ind].getSessionsSize() - (db.students[ind].getSessionsSize() - 1) * 2) << db.students[ind].getSessionByIndex(db.students[ind].getSessionsSize() - 1).numSesion << '|' << endl;
+		cout << std::left << "|" << setw(4) << "9" << "|" <<setw(112) << "Просмотреть сессии " << '|'<<endl;
 	}
 	else {
 		cout << std::left << "|" << setw(4) << "9" << "|" << setw(113) << "Сессии не найдены" << '|' << endl;
@@ -144,7 +140,7 @@ void ConsoleInterfaceHandler::StudentPage(int ind ,Database db)
 	delete[] group;
 	delete[] numGradebook;
 	cTools.PrintSeparator(ConsoleTools::Separators::Simple);
-	cout << "Для изменения поля или получения более подробной информации о нем введите его номер, чтобы вернуться назад 0" << endl;
+	cout << "Для изменения поля или получения более подробной информации о нем введите его номер, чтобы вернуться назад 0,"<<endl<<"чтобы удалить - " << endl;
 	char options;
 	cin >> options;
 	while (fgetc(stdin) != '\n');
@@ -153,6 +149,9 @@ void ConsoleInterfaceHandler::StudentPage(int ind ,Database db)
 	}
 	else if (options=='9') {
 		SessionsPage(db, ind);
+	}
+	else if (options == '-') {
+		db.students.erase(db.students.begin() + ind - 1);
 	}
 	else {
 		UpdateStudPage((UpdatePage)atoi(&options), ind, db);
@@ -545,7 +544,7 @@ void ConsoleInterfaceHandler::SessionsPage(Database db, int ind)
 		prevoptions[7] = '\0';
 		while (fgetc(stdin) != '\n');
 		regex r(R"(^[0-9]{0,2}$)");
-		bool fl = false;
+		fl = false;
 		if (regex_match(prevoptions, r)) {
 			fl = true;
 		}
@@ -591,7 +590,7 @@ void ConsoleInterfaceHandler::AddSessionPage(Database db, int ind)
 		prevoptions[7] = '\0';
 		while (fgetc(stdin) != '\n');
 		regex r(R"(^[0-9]{0,2}$)");
-		bool fl = false;
+		fl = false;
 		if (regex_match(prevoptions, r)) {
 			fl = true;
 		}
@@ -641,7 +640,7 @@ void ConsoleInterfaceHandler::SessionPage(Database db, int ind, int sesInd)
 			prevoptions[7] = '\0';
 			while (fgetc(stdin) != '\n');
 			regex r(R"(^[0-9]{0,2}$)");
-			bool fl = false;
+			fl = false;
 			if (regex_match(prevoptions, r)) {
 				fl = true;
 			}
@@ -690,7 +689,7 @@ void ConsoleInterfaceHandler::DeleteSessionPage(Database db, int ind)
 		prevoptions[7] = '\0';
 		while (fgetc(stdin) != '\n');
 		regex r(R"(^[0-9]{0,2}$)");
-		bool fl = false;
+		fl = false;
 		if (regex_match(prevoptions, r)) {
 			fl = true;
 		}

@@ -6,29 +6,20 @@
 #include <iostream>
 #include <charconv>
 
-/// <summary>
-/// Строка инициализации состоит из данных разделеных : в конце и начале ; 
-/// формат строки ";ФИО:Дата рождения:Год поступления:Институт:факультет:Кафедра:Группа:Номер Зачетки:Номер сессии1:предмет1:оценка1:Номер сессии1:предметn:оценкаn6:Номер сессииk:предметm:оценкаm;"
-/// оценки за сесию должны быть отсортированы по возрастанию номера сессии, к которой они относятся 
-/// </summary>
-/// <param name="initString"></param>
+
 Student::Student(char initString [10240]) {
-	//вектор для хранения данных разбитых по :
 	vector <dataEl> initVector;
 	int i = 0;
 	if (initString[i] == ';') {
 		i++;
 		while (initString[i] != ';') {
-			//в вектор нельзя добавить массив, поэтому обернем его в структуру
 			dataEl curDataEl;
-			//инициализируем массив нуль символами
 			int k = 0;
 			while (k < 64 && curDataEl.chars[k] != '\0') {
 				curDataEl.chars[k] = '\0';
 				k++;
 			}
 			int j = 0;
-			//разбиваем строку по : в масиивы символов
 			while (initString[i] != ':' && initString[i + 1] != ';') {
 				curDataEl.chars[j] = initString[i];
 				i++;
@@ -38,12 +29,10 @@ Student::Student(char initString [10240]) {
 				curDataEl.chars[j] = initString[i];
 			}
 			i++;
-			//добавляем получившийся массив в вектор
 			initVector.push_back(curDataEl);
 		}
 		i = 0;
 		int curentInitVecEl = 0;
-		//записываем первый элемент вектора в фио
 		while (i < 64) {
 			name[i] = initVector[curentInitVecEl].chars[i];
 			i++;
@@ -52,7 +41,6 @@ Student::Student(char initString [10240]) {
 		i = 0;
 		int date[3];
 		int curDateEl = 0;
-		//разбиваем второй элемент по .
 		while (initVector[curentInitVecEl].chars[i] != '\0')
 		{
 			char curInt[8] = { '0' };
@@ -63,48 +51,40 @@ Student::Student(char initString [10240]) {
 				k++;
 			}
 			i++;
-			//преобразуем каждый из получившихся массивов к инту и добавим в массив
 			date[curDateEl] = atoi(curInt);
 			curDateEl++;
 		}
-		//на основании массива инициализируем структуру для хранения даты рождения
 		dateOfBorn.day = date[0];
 		dateOfBorn.month = date[1];
 		dateOfBorn.year = date[2];
 		i = 0;
 		curentInitVecEl++;
-		//запишем следующий элемент вектора в дату поступления, преобразовав его к инту
 		yearOfAdmission = atoi(initVector[curentInitVecEl].chars);
 		curentInitVecEl++;
-		//инициализируем институт следующим элементом вектора
 		while (i < 64) {
 			faculty[i] = initVector[curentInitVecEl].chars[i];
 			i++;
 		}
 		curentInitVecEl++;
 		i = 0;
-		//инициализируем кафедру следующим элементом вектора
 		while (i < 64) {
 			departments[i] = initVector[curentInitVecEl].chars[i];
 			i++;
 		}
 		curentInitVecEl++;
 		i = 0;
-		//инициализируем группу следующим элементом вектора
 		while (i < 16) {
 			group[i] = initVector[curentInitVecEl].chars[i];
 			i++;
 		}
 		curentInitVecEl++;
 		i = 0;
-		//инициализируем зачетку следующим элементом вектора
 		while (i < 16) {
 			numGradebook[i] = initVector[curentInitVecEl].chars[i];
 			i++;
 		}
 		curentInitVecEl++;
 		i = 0;
-		//инициализируем пол следующим элементом вектора
 		while (i < 32) {
 			gender[i] = initVector[curentInitVecEl].chars[i];
 			i++;
@@ -408,8 +388,8 @@ bool Student::updSesResultByIndex(Result res, int sesNum, int resInd)
 			break;
 		}
 	}
-	if (sessions.size() == 1) {
-		sessions[0].oneRes[resInd] = res;
+	if (sessions.size() == sesNum) {
+		sessions[sesNum-1].oneRes[resInd] = res;
 		return true;
 	}
 	if (sesInd != -1) {
@@ -430,8 +410,8 @@ bool Student::addSesResult(Result res, int sesNum)
 			break;
 		}
 	}
-	if (sessions.size() == 1) {
-		sessions[0].oneRes.push_back(res);
+	if (sessions.size() ==sesNum) {
+		sessions[sesNum-1].oneRes.push_back(res);
 		return true;
 	}
 	if (sesInd != -1) {
@@ -450,8 +430,8 @@ bool Student::deleteSesResultByIndex(int sesNum, int resInd)
 			break;
 		}
 	}
-	if (sessions.size() == 1) {
-		sessions[0].oneRes.erase(sessions[0].oneRes.begin() + resInd);
+	if (sessions.size() == sesNum) {
+		sessions[sesNum-1].oneRes.erase(sessions[sesNum-1].oneRes.begin() + resInd);
 		return true;
 	}
 	if (sesInd != -1) {
