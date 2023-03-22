@@ -104,7 +104,6 @@ bool Database::saveDb()
 		y = i;
 	}
 	encrText[y+1] = '\0';
-	//std::cout <<endl<<strlen(encrText)<<endl<< allStud.size()<<endl;
 	crypt.Crypt(encrText, allStud.size());
 
 	for (int i = 0; i < allStud.size();i++) {

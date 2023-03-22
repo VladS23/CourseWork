@@ -118,6 +118,7 @@ Student::Student(char initString [10240]) {
 		}
 	}
 }
+
 vector<char> Student::toCharVec() {
 	vector<char> result;
 	result.push_back(';');
@@ -231,6 +232,7 @@ char* Student::getFaculty()
 	}
 	return res;
 }
+
 char* Student::getDepartments()
 {
 	char* res = new char[sizeof(departments)];
@@ -442,14 +444,12 @@ bool Student::deleteSesResultByIndex(int sesNum, int resInd)
 	}
 	return false;
 }
+
 int Student::getSessionsSize()
 {
 	return sessions.size();
 }
-/// <summary>
-/// test all methods of programm
-/// </summary>
-/// <returns></returns>
+
 int Student::tests()
 {
 	char c1[1024] = ";Петров Петр Петрович:1.12.2003:2021:ИКБ:КБ-1:БАСО-01-21:Б0404:male:1:calculation:4:1:phys:3:2:programming:5:3:SecurityOS:4:4:SecurityDB:5;";
@@ -508,15 +508,6 @@ int Student::tests()
 	boleanTest.push_back(s1.setDateOfBorn(Date{ 777, 777, 777 })==false);
 	char dbt1[1024] = ";Петров Петр Петрович:1.12.2003:2021:ИКБ:КБ-1:БАСО-01-21:Б0404:male:1:calculation:4:1:phys:3:2:programming:5:3:SecurityOS:4:4:SecurityDB:5;";
 	char dbt2[1024] = ";Иванов Иван Иванович:1.12.2003:2021:ИКБ:КБ-1:БАСО-01-21:Б0404:male:1:calculation:4:1:phys:3:2:programming:5:3:SecurityOS:4:4:SecurityDB:5;";
-	//Database db1;
-	//db1.students.push_back(dbt1);
-	//db1.students.push_back(Student(dbt2));
-	//boleanTest.push_back(db1.saveDb()==true);
-	//char ccc3[64] = "D:\\students1.txt";
-	//boleanTest.push_back(db1.loadDb(ccc3)==true);
-	//char t1[] = "1,1,3,4,5,2.";
-	//vector <Student> svec1;
-	//boleanTest.push_back(db1.addFilter(t1, svec1) == false);
 	char indt1[1024] = ";Петров Петр Петрович:1.12.2003:2342:ИКБ:КБ-1:БАСО-01-21:Б0404:male:1:test:5:1:test:5:2:test:5;";
 	char indt2[1024] = ";Васильев Василий Василиевич:1.12.2003:3232:ИКБ:КБ-1:БАСО-01-21:Б0404:male:1:test:5:2:test:5:2:test:5:2:test:5:2:test:5;";
 	char indt3[1024] = ";Тимофеев Тимофей Тимофеевич:1.12.2003:1411:ИКБ:КБ-1:БАСО-01-21:Б0404:male:1:test:5:1:test:5:1:test:5:3:test:5:3:test:5:3:test:5:3:test:5:3:test:5:3:test:5:3:test:5:3:test:5:3:test:5;";
