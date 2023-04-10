@@ -6,6 +6,7 @@
 #include <charconv>
 #include "MyList.h"
 #include "StudentParser.h"
+#include "StudentStringBuilder.h"
 
 Student::Student() {
 ;}
@@ -14,108 +15,7 @@ Student::Student(char initString [10240]) {
 }
 
 MyList <char> Student::toCharVec() {
-	MyList<char> result;
-	result.push_back(';');
-	int i = 0;
-	while (name[i] != '\0') {
-		result.push_back(name[i]);
-		i++;
-	}
-	result.push_back(':');
-	char date[16];
-	char day[4];
-	char month[4];
-	char year[8];
-	sprintf_s(day, "%d", dateOfBorn.day);
-	sprintf_s(month, "%d", dateOfBorn.month);
-	sprintf_s(year, "%d", dateOfBorn.year);
-	i = 0;
-	while (day[i] != '\0') {
-		result.push_back(day[i]);
-		i++;
-	}
-	result.push_back('.');
-	i = 0;
-	while (month[i] != '\0') {
-		result.push_back(month[i]);
-		i++;
-	}
-	result.push_back('.');
-	i = 0;
-	while (year[i] != '\0') {
-		result.push_back(year[i]);
-		i++;
-	}
-	result.push_back(':');
-	sprintf_s(year, "%d", yearOfAdmission);
-	i = 0;
-	while (year[i] != '\0') {
-		result.push_back(year[i]);
-		i++;
-	}
-	result.push_back(':');
-	i = 0;
-	while (faculty[i] != '\0') {
-		result.push_back(faculty[i]);
-		i++;
-	}
-	result.push_back(':');
-	i = 0;
-	while (departments[i] != '\0') {
-		result.push_back(departments[i]);
-		i++;
-	}
-	result.push_back(':');
-	i = 0;
-	while (group[i] != '\0') {
-		result.push_back(group[i]);
-		i++;
-	}
-	result.push_back(':');
-	i = 0;
-	while (numGradebook[i] != '\0') {
-		result.push_back(numGradebook[i]);
-		i++;
-	}
-	result.push_back(':');
-	i = 0;
-	while (gender[i] != '\0') {
-		result.push_back(gender[i]);
-		i++;
-	}
-	result.push_back(':');
-	for (int i = 0; i < sessions.size(); i++) {
-		for (int j=0; j < sessions[i].oneRes.size(); j++) {
-			char sesnum[4];
-			sprintf_s(sesnum, "%d", sessions[i].numSesion);
-			int k = 0;
-			while (sesnum[k]!='\0')
-			{
-				result.push_back(sesnum[k]);
-				k++;
-			}
-			result.push_back(':');
-			k = 0;
-			while (sessions[i].oneRes[j].subName[k] != '\0')
-			{
-				result.push_back(sessions[i].oneRes[j].subName[k]);
-				k++;
-			}
-			result.push_back(':');
-			char grad[4];
-			sprintf_s(grad, "%d", sessions[i].oneRes[j].grading);
-			k = 0;
-			while (grad[k] != '\0')
-			{
-				result.push_back(grad[k]);
-				k++;
-			}
-			result.push_back(':');
-		}
-	}
-	result[result.size() - 1] = ';';
-	result.push_back('\n');
-	return result;
+	return StudentStringBuilder::toCharVec(this);
 }
 
 char* Student::getFaculty()

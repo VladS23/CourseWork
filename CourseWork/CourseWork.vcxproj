@@ -149,6 +149,7 @@
     <ClCompile Include="Structures.h" />
     <ClCompile Include="Student.cpp" />
     <ClCompile Include="StudentParser.cpp" />
+    <ClCompile Include="StudentStringBuilder.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ConsoleInterfaceHandler.h" />
@@ -160,6 +161,7 @@
     <ClInclude Include="Person.h" />
     <ClInclude Include="Student.h" />
     <ClInclude Include="StudentParser.h" />
+    <ClInclude Include="StudentStringBuilder.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
