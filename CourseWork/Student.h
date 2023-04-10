@@ -2,7 +2,7 @@
 #include "Structures.h"
 #include "Person.h"
 class Student : public Person {
-private:
+protected:
 	int yearOfAdmission;
 	char faculty[64];
 	char departments[64];
@@ -30,5 +30,4 @@ public:
 	bool addSesResult(Result res, int sesNum);
 	bool deleteSesResultByIndex(int sesNum, int resInd);
 	int getSessionsSize();
-	static int tests();
 };
