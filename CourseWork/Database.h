@@ -1,5 +1,4 @@
 #pragma once
-#include <vector>
 #include "Student.h"
 #include <set>
 #include "CryptoTools.h"
@@ -11,9 +10,9 @@ private:
 	 CryptoTools crypt;
 public:
 	Database();
-	vector <Student> students;
+	MyList <Student> students;
 	bool loadDb(char* dbPath);
 	bool saveDb();
-	bool addFilter(char filtersStr[64], vector <Student> &filtred );
+	bool addFilter(char filtersStr[64], MyList <Student> &filtred );
 };
 

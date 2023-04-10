@@ -8,10 +8,11 @@ private:
 	char departments[64];
 	char group[16];
 	char numGradebook[16];
-	vector<Session> sessions;
+	MyList <Session> sessions;
 public:
 	Student(char initString[10240]);
-	vector<char> toCharVec();
+	Student();
+	MyList<char> toCharVec();
 	int getYearOfAdmission() { return yearOfAdmission; };
 	char* getFaculty();
 	char* getDepartments();

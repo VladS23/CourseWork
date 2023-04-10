@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include "MyList.h"
 using namespace std;
 struct Date {
 	int day;
@@ -10,7 +11,7 @@ struct Date {
 		char day1[4];
 		char month1[4];
 		char year1[8];
-		vector <char> result;
+		MyList <char> result;
 		sprintf_s(day1, "%d", day);
 		sprintf_s(month1, "%d", month);
 		sprintf_s(year1, "%d", year);
@@ -45,7 +46,7 @@ struct Result
 };
 struct Session {
 	int numSesion;
-	vector <Result> oneRes;
+	MyList <Result> oneRes;
 };
 struct dataEl
 {

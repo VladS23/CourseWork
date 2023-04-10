@@ -3,6 +3,7 @@
 #include "Database.h"
 #include <iomanip>
 #include <regex>
+#include "MyList.h"
 using namespace std;
 
 ConsoleInterfaceHandler::ConsoleInterfaceHandler()
@@ -151,7 +152,7 @@ void ConsoleInterfaceHandler::StudentPage(int ind ,Database db)
 		SessionsPage(db, ind);
 	}
 	else if (options == '-') {
-		db.students.erase(db.students.begin() + ind - 1);
+		db.students.removeAt(ind - 1);
 	}
 	else {
 		UpdateStudPage((UpdatePage)atoi(&options), ind, db);
@@ -169,8 +170,8 @@ void ConsoleInterfaceHandler::CreateStudentPage(Database db)
 	char name[64];
 	char dateOfBorn[16];
 	char gender[32];
-	vector <char> InitVector;
-	InitVector.push_back(';');
+	MyList <char> InitList;
+	InitList.push_back(';');
 	cTools.Clear();
 	cout << "—оздать студента" << endl << endl;
 	bool fl = false;
@@ -179,9 +180,9 @@ void ConsoleInterfaceHandler::CreateStudentPage(Database db)
 	while (fgetc(stdin) != '\n');
 	name[63] = '\0';
 	for (int i = 0; i < strlen(name); i++) {
-		InitVector.push_back(name[i]);
+		InitList.push_back(name[i]);
 	}
-	InitVector.push_back(':');
+	InitList.push_back(':');
 	cout << "¬ведите дату рождени€ через точку" << endl;
 	cin.get(dateOfBorn, 16);
 	dateOfBorn[15] = '\0';
@@ -202,9 +203,9 @@ void ConsoleInterfaceHandler::CreateStudentPage(Database db)
 		}
 	}
 	for (int i = 0; i < strlen(dateOfBorn); i++) {
-		InitVector.push_back(dateOfBorn[i]);
+		InitList.push_back(dateOfBorn[i]);
 	}
-	InitVector.push_back(':');
+	InitList.push_back(':');
 	cout << "¬ведите год поступлени€"<<endl;
 	fl = false;
 	cin.get(yearOfAdmission, 8);
@@ -225,52 +226,52 @@ void ConsoleInterfaceHandler::CreateStudentPage(Database db)
 		}
 	}
 	for (int i = 0; i < strlen(yearOfAdmission); i++) {
-		InitVector.push_back(yearOfAdmission[i]);
+		InitList.push_back(yearOfAdmission[i]);
 	}
-	InitVector.push_back(':');
+	InitList.push_back(':');
 	cout << "¬ведите факультет" << endl;
 	cin.get(faculty, 64);
 	faculty[63] = '\0';
 	while (fgetc(stdin) != '\n');
 	for (int i = 0; i < strlen(faculty); i++) {
-		InitVector.push_back(faculty[i]);
+		InitList.push_back(faculty[i]);
 	}
-	InitVector.push_back(':');
+	InitList.push_back(':');
 	cout << "¬ведите кафедру" << endl;
 	cin.get(departments, 64);
 	departments[63] = '\0';
 	while (fgetc(stdin) != '\n');
 	for (int i = 0; i < strlen(departments); i++) {
-		InitVector.push_back(departments[i]);
+		InitList.push_back(departments[i]);
 	}
-	InitVector.push_back(':');
+	InitList.push_back(':');
 	cout << "¬ведите группу" << endl;
 	cin.get(group, 16);
 	group[15] = '\0';
 	while (fgetc(stdin) != '\n');
 	for (int i = 0; i < strlen(group); i++) {
-		InitVector.push_back(group[i]);
+		InitList.push_back(group[i]);
 	}
-	InitVector.push_back(':');
+	InitList.push_back(':');
 	cout << "¬ведите номер студенческого билета" << endl;
 	cin.get(numGradebook, 16);
 	numGradebook[15] = '\0';
 	while (fgetc(stdin) != '\n');
 	for (int i = 0; i < strlen(numGradebook); i++) {
-		InitVector.push_back(numGradebook[i]);
+		InitList.push_back(numGradebook[i]);
 	}
-	InitVector.push_back(':');
+	InitList.push_back(':');
 	cout << "¬ведите пол" << endl;
 	cin.get(gender, 32);
 	gender[31] = '\0';
 	while (fgetc(stdin) != '\n');
 	for (int i = 0; i < strlen(gender); i++) {
-		InitVector.push_back(gender[i]);
+		InitList.push_back(gender[i]);
 	}
-	InitVector.push_back(';');
-	char* initChars = new char[InitVector.size()+10];
-	for (int i = 0; i < InitVector.size(); i++) {
-		initChars[i] = InitVector[i];
+	InitList.push_back(';');
+	char* initChars = new char[InitList.size()+10];
+	for (int i = 0; i < InitList.size(); i++) {
+		initChars[i] = InitList[i];
 	}
 	db.students.push_back(Student(initChars));
 	cTools.Clear();
@@ -283,7 +284,7 @@ void ConsoleInterfaceHandler::FiltredStud(Database db)
 {
 	bool fl = false;
 	char filter[64];
-	vector <Student> filtred;
+	MyList <Student> filtred;
 	cTools.Clear();
 	cout << "¬ведите номера сессии, по которым необходимо фильтровать через зап€тую, без пробелов" << endl;
 	cin >>setw(64) >> filter;

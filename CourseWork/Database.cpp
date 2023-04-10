@@ -1,11 +1,12 @@
 #include "Database.h"
+#include "MyList.h"
 #include <fstream>
-#include <vector>
 #include <string>
 #include <regex>
 #include <set>
 #include <string.h>
 #include <iostream>
+
 
 using namespace std;
 
@@ -39,7 +40,7 @@ bool Database::loadDb(char* dbPath)
 	students.clear();
 	byte buf;
 	std::ifstream in(dbPath, std::ios::binary);
-	vector <byte> initString;
+	MyList <byte> initString;
 	if (!in.is_open()) {
 		return false;
 	}
@@ -55,22 +56,22 @@ bool Database::loadDb(char* dbPath)
 	}
 	crypt.Decrypt(plaintext, initString.size());
 	int count=0;
-	vector<char> initVector;
+	MyList<char> initList;
 	for (int i = 0; i < strlen(plaintext); i++) {
 		if (plaintext[i] == ';') {
 			count++;
 		}
 		if (count == 1) {
-			initVector.push_back(plaintext[i]);
+			initList.push_back(plaintext[i]);
 		}
 		if (count == 2) {
-			initVector.push_back(plaintext[i]);
-			char* initArr = new char[initVector.size()];
-			for (int j = 0; j < initVector.size(); j++) {
-				initArr[j] = initVector[j];
+			initList.push_back(plaintext[i]);
+			char* initArr = new char[initList.size()];
+			for (int j = 0; j < initList.size(); j++) {
+				initArr[j] = initList[j];
 			}
 			count = 0;
-			initVector.clear();
+			initList.clear();
 			this->students.push_back(Student((initArr)));
 		}
 	}
@@ -87,11 +88,11 @@ bool Database::saveDb()
 {
 	std::ofstream out;
 	out.open(DbPath, std::ios::out|std::ios::binary);
-	vector<char> allStud;
+	MyList <char> allStud;
 	if (out.is_open())
 	{
 		for (int i=0; i<students.size();i++){
-			vector<char> buff = students[i].toCharVec();
+			MyList<char> buff = students[i].toCharVec();
 			for (int j = 0; j < buff.size(); j++) {
 				allStud.push_back(buff[j]);
 			}
@@ -117,10 +118,14 @@ bool Database::saveDb()
 	return fl;
 }
 
-bool Database::addFilter(char filtersStr[64], vector <Student>& filtred)
+bool Database::addFilter(char filtersStr[64], MyList <Student>& filtred)
 {
 	static const regex r(R"(^[\d\,]*\d$)");
-	vector <Student> temp(students.begin(), students.end());
+	vector <Student> temp;
+	for (int i = 0; i < students.size(); i++) {
+		Student t{ students[i] };
+		temp.push_back(t);
+	}
 	if (regex_match(filtersStr, r)) {
 		int i = 0;
 		vector <int> sesNumbers;

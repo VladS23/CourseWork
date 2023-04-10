@@ -144,6 +144,7 @@
     <ClCompile Include="CourseWork.cpp" />
     <ClCompile Include="CryptoTools.cpp" />
     <ClCompile Include="Database.cpp" />
+    <ClCompile Include="MyList.cpp" />
     <ClCompile Include="Person.cpp" />
     <ClCompile Include="Structures.h" />
     <ClCompile Include="Student.cpp" />
@@ -153,6 +154,8 @@
     <ClInclude Include="ConsoleTools.h" />
     <ClInclude Include="CryptoTools.h" />
     <ClInclude Include="Database.h" />
+    <ClInclude Include="MyList.h" />
+    <ClInclude Include="Node.h" />
     <ClInclude Include="Person.h" />
     <ClInclude Include="Student.h" />
   </ItemGroup>

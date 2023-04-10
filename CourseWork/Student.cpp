@@ -2,13 +2,14 @@
 #include "Person.h"
 #include "Database.h"
 #include"CryptoTools.h"
-#include <vector>
 #include <iostream>
 #include <charconv>
+#include "MyList.h"
 
-
+Student::Student() {
+;}
 Student::Student(char initString [10240]) {
-	vector <dataEl> initVector;
+	MyList <dataEl> initList;
 	int i = 0;
 	if (initString[i] == ';') {
 		i++;
@@ -29,24 +30,24 @@ Student::Student(char initString [10240]) {
 				curDataEl.chars[j] = initString[i];
 			}
 			i++;
-			initVector.push_back(curDataEl);
+			initList.push_back(curDataEl);
 		}
 		i = 0;
 		int curentInitVecEl = 0;
 		while (i < 64) {
-			name[i] = initVector[curentInitVecEl].chars[i];
+			name[i] = initList[curentInitVecEl].chars[i];
 			i++;
 		}
 		curentInitVecEl++;
 		i = 0;
 		int date[3];
 		int curDateEl = 0;
-		while (initVector[curentInitVecEl].chars[i] != '\0')
+		while (initList[curentInitVecEl].chars[i] != '\0')
 		{
 			char curInt[8] = { '0' };
 			int k = 0;
-			while (initVector[curentInitVecEl].chars[i] != '.' && initVector[curentInitVecEl].chars[i] != '\0') {
-				curInt[k] = initVector[curentInitVecEl].chars[i];
+			while (initList[curentInitVecEl].chars[i] != '.' && initList[curentInitVecEl].chars[i] != '\0') {
+				curInt[k] = initList[curentInitVecEl].chars[i];
 				i++;
 				k++;
 			}
@@ -59,45 +60,45 @@ Student::Student(char initString [10240]) {
 		dateOfBorn.year = date[2];
 		i = 0;
 		curentInitVecEl++;
-		yearOfAdmission = atoi(initVector[curentInitVecEl].chars);
+		yearOfAdmission = atoi(initList[curentInitVecEl].chars);
 		curentInitVecEl++;
 		while (i < 64) {
-			faculty[i] = initVector[curentInitVecEl].chars[i];
+			faculty[i] = initList[curentInitVecEl].chars[i];
 			i++;
 		}
 		curentInitVecEl++;
 		i = 0;
 		while (i < 64) {
-			departments[i] = initVector[curentInitVecEl].chars[i];
+			departments[i] = initList[curentInitVecEl].chars[i];
 			i++;
 		}
 		curentInitVecEl++;
 		i = 0;
 		while (i < 16) {
-			group[i] = initVector[curentInitVecEl].chars[i];
+			group[i] = initList[curentInitVecEl].chars[i];
 			i++;
 		}
 		curentInitVecEl++;
 		i = 0;
 		while (i < 16) {
-			numGradebook[i] = initVector[curentInitVecEl].chars[i];
+			numGradebook[i] = initList[curentInitVecEl].chars[i];
 			i++;
 		}
 		curentInitVecEl++;
 		i = 0;
 		while (i < 32) {
-			gender[i] = initVector[curentInitVecEl].chars[i];
+			gender[i] = initList[curentInitVecEl].chars[i];
 			i++;
 		}
 		curentInitVecEl++;
 		int prevSession = 0;
 		int curSesIterator = -1;
-		while (curentInitVecEl < initVector.size())
+		while (curentInitVecEl < initList.size())
 		{
-			if (atoi(initVector[curentInitVecEl].chars) > prevSession) {
+			if (atoi(initList[curentInitVecEl].chars) > prevSession) {
 				Session curSes;
-				prevSession = atoi(initVector[curentInitVecEl].chars);
-				curSes.numSesion = atoi(initVector[curentInitVecEl].chars);
+				prevSession = atoi(initList[curentInitVecEl].chars);
+				curSes.numSesion = atoi(initList[curentInitVecEl].chars);
 				sessions.push_back(curSes);
 				curSesIterator++;
 				curentInitVecEl++;
@@ -108,19 +109,19 @@ Student::Student(char initString [10240]) {
 			Result curOneRes;
 			int i = 0;
 			while (i < 64) {
-				curOneRes.subName[i] = initVector[curentInitVecEl].chars[i];
+				curOneRes.subName[i] = initList[curentInitVecEl].chars[i];
 				i++;
 			}
 			curentInitVecEl++;
-			curOneRes.grading = atoi(initVector[curentInitVecEl].chars);
+			curOneRes.grading = atoi(initList[curentInitVecEl].chars);
 			sessions[curSesIterator].oneRes.push_back(curOneRes);
 			curentInitVecEl++;
 		}
 	}
 }
 
-vector<char> Student::toCharVec() {
-	vector<char> result;
+MyList <char> Student::toCharVec() {
+	MyList<char> result;
 	result.push_back(';');
 	int i = 0;
 	while (name[i] != '\0') {
@@ -324,7 +325,6 @@ bool Student::setNumGradebook(char newVal [16])
 
 bool Student::deleteSessionByNum(int num)
 {
-	vector <Session>::iterator Iter;
 	int ind = -1;
 	for (int i = 0; i < sessions.size(); i++) {
 		if (sessions[i].numSesion == num) {
@@ -333,8 +333,7 @@ bool Student::deleteSessionByNum(int num)
 		}
 	}
 	if (ind != -1) {
-		Iter = sessions.begin()+ind;
-		sessions.erase(Iter);
+		sessions.removeAt(ind);
 		return true;
 	}
 	return false;
@@ -367,7 +366,7 @@ bool Student::addSessionByNum(int num)
 			}
 			Session newSes;
 			newSes.numSesion = num;
-			sessions.insert(sessions.begin() + ind, newSes);
+			sessions.insert(newSes, ind);
 			return true;
 		}
 	}
@@ -433,12 +432,12 @@ bool Student::deleteSesResultByIndex(int sesNum, int resInd)
 		}
 	}
 	if (sessions.size() == sesNum) {
-		sessions[sesNum-1].oneRes.erase(sessions[sesNum-1].oneRes.begin() + resInd);
+		sessions[sesNum-1].oneRes.removeAt(resInd);
 		return true;
 	}
 	if (sesInd != -1) {
 		if (resInd < sessions[sesInd].oneRes.size()) {
-			sessions[sesInd].oneRes.erase(sessions[sesInd].oneRes.begin() + resInd);
+			sessions[sesInd].oneRes.removeAt(resInd);
 				return true;
 		}
 	}
@@ -449,7 +448,7 @@ int Student::getSessionsSize()
 {
 	return sessions.size();
 }
-
+/*
 int Student::tests()
 {
 	char c1[1024] = ";Петров Петр Петрович:1.12.2003:2021:ИКБ:КБ-1:БАСО-01-21:Б0404:male:1:calculation:4:1:phys:3:2:programming:5:3:SecurityOS:4:4:SecurityDB:5;";
@@ -562,3 +561,4 @@ int Student::tests()
 	}
 	return 0;
 }
+*/

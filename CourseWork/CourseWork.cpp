@@ -1,6 +1,5 @@
 ﻿#include <iostream>
 #include <string>
-#include <vector>
 #include <fstream>
 #include "Student.h"
 #include <Windows.h>
