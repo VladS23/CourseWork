@@ -13,19 +13,15 @@ bool Person::checkCharArray(char* newVal, int len)
 
 char* Person::getName()
 {
-	char* res = new char[sizeof(name)];
-	for (int i = 0; i < sizeof(name) / sizeof(char); i++) {
-		*(res + i) = name[i];
-	}
+	char* res = new char[sizeof(name)/sizeof(char)];
+	strcpy_s(res, sizeof(name) / sizeof(char), name);
 	return res;
 }
 
 char* Person::getGender()
 {
 	char* res = new char[sizeof(gender)];
-	for (int i = 0; i < sizeof(gender) / sizeof(char); i++) {
-		*(res + i) = gender[i];
-	}
+	strcpy_s(res, sizeof(gender) / sizeof(char), gender);
 	return res;
 }
 

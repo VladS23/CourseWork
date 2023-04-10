@@ -20,37 +20,29 @@ MyList <char> Student::toCharVec() {
 
 char* Student::getFaculty()
 {
-	char* res = new char [sizeof(faculty)];
-	for (int i = 0; i < sizeof(faculty) / sizeof(char); i++) {
-		*(res + i) = faculty[i];
-	}
+	char* res = new char [sizeof(faculty) / sizeof(char)];
+	strcpy_s(res, sizeof(faculty) / sizeof(char), faculty);
 	return res;
 }
 
 char* Student::getDepartments()
 {
-	char* res = new char[sizeof(departments)];
-	for (int i = 0; i < sizeof(departments) / sizeof(char); i++) {
-		*(res + i) = departments[i];
-	}
+	char* res = new char[sizeof(departments) / sizeof(char)];
+	strcpy_s(res, sizeof(departments) / sizeof(char), departments);
 	return res;
 }
 
 char* Student::getGroup()
 {
-	char* res = new char[sizeof(group)];
-	for (int i = 0; i < sizeof(group) / sizeof(char); i++) {
-		*(res + i) = group[i];
-	}
+	char* res = new char[sizeof(group) / sizeof(char)];
+	strcpy_s(res, sizeof(group) / sizeof(char), group);
 	return res;
 }
 
 char* Student::getNumGradebook()
 {
-	char* res = new char[sizeof(numGradebook)];
-	for (int i = 0; i < sizeof(numGradebook) / sizeof(char); i++) {
-		*(res + i) = numGradebook[i];
-	}
+	char* res = new char[sizeof(numGradebook) / sizeof(char)];
+	strcpy_s(res, sizeof(numGradebook) / sizeof(char), numGradebook);
 	return res;
 }
 
