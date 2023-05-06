@@ -39,7 +39,7 @@ bool Database::loadDb(char* dbPath)
 {
 	students.clear();
 	byte buf;
-	std::ifstream in(dbPath, std::ios::binary);
+	std::ifstream in(dbPath);
 	MyList <byte> initString;
 	if (!in.is_open()) {
 		return false;
@@ -87,7 +87,7 @@ bool Database::loadDb(char* dbPath)
 bool Database::saveDb()
 {
 	std::ofstream out;
-	out.open(DbPath, std::ios::out|std::ios::binary);
+	out.open(DbPath, std::ios::out);
 	MyList <char> allStud;
 	if (out.is_open())
 	{

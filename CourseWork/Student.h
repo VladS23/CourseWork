@@ -1,6 +1,7 @@
 #pragma once
 #include "Structures.h"
 #include "Person.h"
+
 class Student : public Person {
 protected:
 	int yearOfAdmission;
