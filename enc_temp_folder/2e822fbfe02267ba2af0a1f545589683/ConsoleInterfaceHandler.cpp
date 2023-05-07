@@ -152,7 +152,7 @@ void ConsoleInterfaceHandler::StudentPage(int ind ,Database db)
 		SessionsPage(db, ind);
 	}
 	else if (options == '-') {
-		db.students.removeAt(ind);
+		db.students.removeAt(ind - 1);
 	}
 	else {
 		UpdateStudPage((UpdatePage)atoi(&options), ind, db);
