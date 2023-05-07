@@ -20,12 +20,12 @@ private:
     CHAR szPassword[PASSWORD_LENGTH] = "";
     DWORD dwLength;
 	void MyHandleError(char* s);
+    void GetConsoleInput(char* strInput,
+        UINT  intMaxChars);
 
 public:
 	CryptoTools();
     ~CryptoTools();
-	void GetConsoleInput(char* strInput,
-		UINT  intMaxChars);
     void Crypt(char* chars, int charsLen);
     void Decrypt(char* chars, int charsLen);
 };
