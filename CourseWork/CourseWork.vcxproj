@@ -144,7 +144,6 @@
     <ClCompile Include="CourseWork.cpp" />
     <ClCompile Include="CryptoTools.cpp" />
     <ClCompile Include="Database.cpp" />
-    <ClCompile Include="MyList.cpp" />
     <ClCompile Include="Person.cpp" />
     <ClCompile Include="Structures.h" />
     <ClCompile Include="Student.cpp" />

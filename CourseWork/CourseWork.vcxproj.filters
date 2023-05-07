@@ -39,9 +39,6 @@
     <ClCompile Include="ConsoleTools.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="MyList.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
     <ClCompile Include="StudentParser.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
